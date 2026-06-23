@@ -7,9 +7,11 @@ import { Footer } from "../components/Footer"
 export const Layout = () => {
     return (
         <ScrollToTop>
-            <Navbar />
-                <Outlet />
-            <Footer />
+            <div className="container page">
+                <Navbar />
+                    <Outlet />                
+                <Footer />
+            </div>
         </ScrollToTop>
     )
 }

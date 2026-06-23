@@ -1,0 +1,20 @@
+.page {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+/* NAVBAR BLANCO LIMPIO */
+.navbar-custom {
+  background-color: #ffffff;
+}
+
+.hero-section {
+  background-color: #f5f9ff;
+}
+
+/* FOOTER SIEMPRE ABAJO */
+footer {
+	margin-top: auto;
+  	background-color: #0a4bac; /* azul Bootstrap */
+  	color: white;
+}
