@@ -43,7 +43,6 @@ body {
   align-items: center;
   justify-content: center;
   background-color: rgb(225, 236, 249);
-  background-image: url("https://drive.google.com/file/d/1JA8MsJ5zhLEp4UDRzJvMMDJQHk1RbvZt/view?usp=sharing");  
 }
 
 .jumbotron-content {
@@ -66,7 +65,7 @@ body {
   width: auto;    
 }
 
-.Features {
+.container-features {
   background-color: white;
 }
 
@@ -88,7 +87,21 @@ footer p {
   margin: 0;
 }
 
+/* PÁGINA DE LOGIN */
 .container-login {
-  background-color: white;
+  background-color: rgb(225, 236, 249);
   height: 85vh;
+  margin: 0;
 }
+
+.col-login-card,
+.col-login-imagen {
+  height: 80vh;
+}
+
+.login-card,
+.login-imagen {
+    width: 60%;
+    height: 80%
+}
+
