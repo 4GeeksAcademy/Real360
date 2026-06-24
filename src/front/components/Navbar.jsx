@@ -4,7 +4,7 @@ export const Navbar = () => {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-custom">
 			<div className="container">
-				<Link className="navbar-brand" to="/"> 
+				<Link className="navbar-brand fs-3 fw-bold" to="/"> 
 					<i className="fa-regular fa-building me-2"> </i>&nbsp;
 					REAL 360
 				</Link>
@@ -25,7 +25,7 @@ export const Navbar = () => {
 					<Link to="/login">
 						<button className="btn btn-login">
 							<i className="fa-brands fa-expeditedssl fa-lg"></i>&nbsp;
-								Iniciar sesión
+								Inicia sesión
 						</button>
 					</Link>
 				</div>

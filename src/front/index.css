@@ -1,12 +1,23 @@
 body {
   background-color: whitesmoke;
+  height: 100%;
+  margin: 0;
 }
-.page {
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-general {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
-.navbar-custom {
+
+.navbar {
+  height: 10vh;
   background-color: white;
 }
 
@@ -27,16 +38,17 @@ body {
   border: 1px solid #0d6efd;
 }
 
-.jumbotron {
+.container-jumbotron {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
   background-color: rgb(225, 236, 249);
+  background-image: url("https://drive.google.com/file/d/1JA8MsJ5zhLEp4UDRzJvMMDJQHk1RbvZt/view?usp=sharing");  
 }
 
 .jumbotron-content {
   text-align: left;
+  padding: 3rem;
 }
 
 .jumbotron-title {
@@ -65,12 +77,18 @@ body {
 }
 
 /* FOOTER SIEMPRE ABAJO */
-footer {
+.footer {
   margin-top: auto;
   background-color: #0d6efd;
   color: white;
+  height: 10vh;
 }
 
 footer p {
   margin: 0;
+}
+
+.container-login {
+  background-color: white;
+  height: 85vh;
 }

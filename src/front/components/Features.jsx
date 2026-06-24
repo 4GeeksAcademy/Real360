@@ -9,16 +9,16 @@ const Features = () => {
 		{url:"https://images.pexels.com/photos/8470837/pexels-photo-8470837.jpeg",title:"Publica tu Inmueble", subtitle: "Publica tu inmueble y encuentra compradores o inquilinos de forma más rápida y eficiente.."}
 	];
   return (
-    <div className = "Container Features">
+    <div className = "Container container-features">
       <div className = "row g-4 p-3">{
-						cardImages.map((img,index) => {
-							return (
-								<div className="col-lg-3 col-md-6 col-12">
-									<Card key={index} url={img.url} title={img.title} subtitle={img.subtitle}/>
-								</div>
-							);
-						})}					
+		cardImages.map((img,index) => {
+			return (
+				<div className="col-lg-3 col-md-6 col-12">
+					<Card key={index} url={img.url} title={img.title} subtitle={img.subtitle}/>
 				</div>
+				);
+			})}					
+		</div>
     </div>
   )
 }
