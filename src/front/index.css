@@ -1,20 +1,53 @@
+body {
+	background-color: whitesmoke;
+}
 .page {
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 /* NAVBAR BLANCO LIMPIO */
 .navbar-custom {
-  background-color: #ffffff;
+  background-color:white;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+  color: #021138;
+}
+
+.btn-login {
+	background-color: white;
+	color: #021138;;
+	border: 1px solid #0a4bac;
+}
+
+.btn-login:hover {
+	background-color: #0a4bac;
+	color: white;
+	border: 1px solid #0a4bac;
 }
 
 .hero-section {
-  background-color: #f5f9ff;
+  background-color: #e0ebf9;
+}
+
+.hero-image {
+  width: 300px;
+  border-radius: 5px;
+}
+
+.main-section {
+  background-color: white;
 }
 
 /* FOOTER SIEMPRE ABAJO */
 footer {
-	margin-top: auto;
-  	background-color: #0a4bac; /* azul Bootstrap */
-  	color: white;
+  margin-top: auto;
+  background-color: #0a4bac; /* azul Bootstrap */
+  color: white;
+}
+
+footer p {
+  margin: 0;
 }
