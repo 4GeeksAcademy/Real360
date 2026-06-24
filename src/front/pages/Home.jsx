@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-import HeroSection from "../components/HeroSection";
-import MainSection from "../components/MainSection";
+import Jumbotron from "../components/Jumbotron.jsx";
+import Features from "../components/Features.jsx";
 
 export const Home = () => {
 
@@ -35,8 +35,8 @@ export const Home = () => {
 
 	return (
 		<>
-		<HeroSection />
-		<MainSection />
+		<Jumbotron />
+		<Features />
 		</>
 	);
 }; 

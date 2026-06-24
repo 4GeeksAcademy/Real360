@@ -23,10 +23,10 @@ export const Navbar = () => {
 					</ul>
 					
 					<Link to="/login">
-							<button className="btn btn-login">
-								<i className="fa-brands fa-expeditedssl fa-lg"></i>&nbsp;
+						<button className="btn btn-login">
+							<i className="fa-brands fa-expeditedssl fa-lg"></i>&nbsp;
 								Iniciar sesión
-							</button>
+						</button>
 					</Link>
 				</div>
 			</div>

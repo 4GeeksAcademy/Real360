@@ -1,14 +1,13 @@
 body {
-	background-color: whitesmoke;
+  background-color: whitesmoke;
 }
 .page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
-/* NAVBAR BLANCO LIMPIO */
 .navbar-custom {
-  background-color:white;
+  background-color: white;
 }
 
 .navbar-custom .navbar-brand,
@@ -17,34 +16,58 @@ body {
 }
 
 .btn-login {
-	background-color: white;
-	color: #021138;;
-	border: 1px solid #0a4bac;
+  background-color: white;
+  color: #021138;
+  border: 1px solid #0d6efd;
 }
 
 .btn-login:hover {
-	background-color: #0a4bac;
-	color: white;
-	border: 1px solid #0a4bac;
+  background-color: #0d6efd;
+  color: white;
+  border: 1px solid #0d6efd;
 }
 
-.hero-section {
-  background-color: #e0ebf9;
+.jumbotron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background-color: rgb(225, 236, 249);
 }
 
-.hero-image {
-  width: 300px;
-  border-radius: 5px;
+.jumbotron-content {
+  text-align: left;
 }
 
-.main-section {
+.jumbotron-title {
+  font-size: 3rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.jumbotron-subtitle {
+  font-size: 1.3rem;
+}
+  
+.jumbotron-img {
+  height: 200px;   
+  width: auto;    
+}
+
+.Features {
   background-color: white;
+}
+
+.card-img-top {
+  height: 300px;
+  width: auto;
+  object-fit: cover;
 }
 
 /* FOOTER SIEMPRE ABAJO */
 footer {
   margin-top: auto;
-  background-color: #0a4bac; /* azul Bootstrap */
+  background-color: #0d6efd;
   color: white;
 }
 
