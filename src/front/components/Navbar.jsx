@@ -17,8 +17,8 @@ export const Navbar = () => {
 					<ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-3">
 						<li className="nav-item"><Link className="nav-link" to="/"> Inicio </Link></li>
 						<li className="nav-item"><Link className="nav-link" to="/nosotros"> Nosotros </Link></li>
-						<li className="nav-item"><Link className="nav-link" to="/servicios"> Servicios </Link></li>
-						<li className="nav-item"><Link className="nav-link" to="/contacto"> Contáctanos </Link></li>
+						<li className="nav-item"><Link className="nav-link" to="/services"> Servicios </Link></li>
+						<li className="nav-item"><Link className="nav-link" to="/contact"> Contáctanos </Link></li>
 						<li className="nav-item"><Link className="nav-link" to="/servicios"> Blog </Link></li>	
 					</ul>
 					
