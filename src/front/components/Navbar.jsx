@@ -4,7 +4,7 @@ export const Navbar = () => {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-custom">
 			<div className="container">
-				<Link className="navbar-brand" to="/"> 
+				<Link className="navbar-brand fs-3 fw-bold" to="/">
 					<i className="fa-regular fa-building me-2"> </i>&nbsp;
 					REAL 360
 				</Link>
@@ -16,16 +16,16 @@ export const Navbar = () => {
 				<div className="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-3">
 						<li className="nav-item"><Link className="nav-link" to="/"> Inicio </Link></li>
-						<li className="nav-item"><Link className="nav-link" to="/nosotros"> Nosotros </Link></li>
+						<li className="nav-item"><Link className="nav-link" to="/about"> Nosotros </Link></li>
 						<li className="nav-item"><Link className="nav-link" to="/services"> Servicios </Link></li>
 						<li className="nav-item"><Link className="nav-link" to="/contact"> Contáctanos </Link></li>
-						<li className="nav-item"><Link className="nav-link" to="/servicios"> Blog </Link></li>	
+						<li className="nav-item"><Link className="nav-link" to="/blog"> Blog </Link></li>
 					</ul>
-					
+
 					<Link to="/login">
 						<button className="btn btn-login">
 							<i className="fa-brands fa-expeditedssl fa-lg"></i>&nbsp;
-								Iniciar sesión
+							Inicia sesión
 						</button>
 					</Link>
 				</div>
