@@ -1,13 +1,13 @@
 import React, { useEffect } from "react"
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-import Jumbotron from "../components/Jumbotron.jsx";
-import Features from "../components/Features.jsx";
+import { Jumbotron } from "../components/Jumbotron.jsx";
+import { Features } from "../components/Features.jsx";
+import { CallToAction } from "../components/CallToAction.jsx";
 import { useNavigate } from "react-router-dom";
-
 
 export const Home = () => {
 
-	const { store, dispatch } = useGlobalReducer()
+	const { store, dispatch } = useGlobalReducer();
 	const navigate = useNavigate();
 
 	const loadMessage = async () => {
@@ -39,6 +39,8 @@ export const Home = () => {
 	return (
 		<>
 			<Jumbotron />
+			<Features />
+			<CallToAction />
 		</>
 	);
 }; 

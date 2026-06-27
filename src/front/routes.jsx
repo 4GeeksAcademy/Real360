@@ -1,17 +1,17 @@
 // Import necessary components and functions from react-router-dom.
 import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
 } from "react-router-dom";
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
-import { Single } from "./pages/Single";
-import { Demo } from "./pages/Demo";
-import { Contact } from "./pages/Contact";
-import { Services } from "./pages/Services";
-import Login from "./pages/Login";
+{/*import { Single } from "./pages/Single";*/ }
 import { About } from "./pages/About";
+import { Services } from "./pages/Services";
+import { Contact } from "./pages/Contact";
+import { Blog } from "./pages/Blog";
+import { Login } from "./pages/Login";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -26,12 +26,13 @@ export const router = createBrowserRouter(
 
         {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
         <Route path= "/" element={<Home />} />
-        <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
-        <Route path="/demo" element={<Demo />} />
-        <Route path="/contact" element={<Contact />}/>
-        <Route path="/services" element={<Services />}/>
-        <Route path="/login" element={<Login />} />
+        {/*<Route path="/single/:theId" element={ <Single />} />   Dynamic route for single items */}
+        {/*<Route path="/demo" element={<Demo />} />*/}
         <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />}/>
+        <Route path="/contact" element={<Contact />}/>
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/login" element={<Login />} />
       </Route>
     )
 );

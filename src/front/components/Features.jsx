@@ -1,26 +1,28 @@
 import React from "react";
-import Card from "./Card";
+import { Card } from "./Card";
+import beneficio1 from "../assets/img/b1-gestion-eficiente.png";
+import beneficio2 from "../assets/img/b2-morosidad-controlada.png";
+import beneficio3 from "../assets/img/b3-cuidamos-tu-propiedad.png";
+import beneficio4 from "../assets/img/b4-comunicacion-constante.jpg";
 
-const Features = () => {
+export const Features = () => {
 	const cardImages = [
-		{url:"https://images.pexels.com/photos/20545013/pexels-photo-20545013.jpeg",title:"Gestiona tu Edificio", subtitle: "Optimiza la administración de tu edificio y mejora la experiencia de los residentes.."},
-		{url:"https://images.pexels.com/photos/7714698/pexels-photo-7714698.jpeg",title:"Contratación de Personal", subtitle: "Encuentra y contrata personal confiable para tu edificio de forma rápida y segura."},
-		{url:"https://images.pexels.com/photos/19789841/pexels-photo-19789841.jpeg",title:"Mantenimientos", subtitle: "Accede a servicios de mantenimiento especializados para mantener tu edificio en óptimas condiciones.."},
-		{url:"https://images.pexels.com/photos/8470837/pexels-photo-8470837.jpeg",title:"Publica tu Inmueble", subtitle: "Publica tu inmueble y encuentra compradores o inquilinos de forma más rápida y eficiente.."}
+		{ url: beneficio1, title: "Gestión Transparente", subtitle: "Gestionamos de manera eficiente tus cuotas, ingresos y gastos, con reportes claros y transparentes para una mejor toma de decisiones." },
+		{ url: beneficio2, title: "Control de morosidad", subtitle: "Contribuimos a reducir la morosidad del edificio implementando alertas oportunas y un seguimiento preciso de los pagos pendientes." },
+		{ url: beneficio3, title: "Cuidado de tu Propiedad", subtitle: "Realizamos los mantenimientos oportunos y aseguramos que tu propiedad siempre esté limpia, operativa y presentable." },
+		{ url: beneficio4, title: "Comunicación Oportuna", subtitle: "Mantenemos a todos los residentes informados y siempre comunicados con avisos claros, oportunos y constantes." }
 	];
-  return (
-    <div className = "Container container-features">
-      <div className = "row g-4 p-3">{
-		cardImages.map((img,index) => {
-			return (
-				<div className="col-lg-3 col-md-6 col-12">
-					<Card key={index} url={img.url} title={img.title} subtitle={img.subtitle}/>
-				</div>
-				);
-			})}					
+	return (
+		<div className="Container features">
+			<div className="row g-4 p-3 features-row">{
+				cardImages.map((img, index) => {
+					return (
+						<div className="col-lg-3 col-md-6 col-12 feature-col">
+							<Card key={index} url={img.url} title={img.title} subtitle={img.subtitle} />
+						</div>
+					);
+				})}
+			</div>
 		</div>
-    </div>
-  )
-}
-
-export default Features;
+	);
+};

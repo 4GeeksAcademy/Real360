@@ -1,8 +1,7 @@
-export const Footer = () => (
-	<footer className="footer py-2 text-center">
-		<p>
-			Made with <i className="fa fa-heart text-danger" /> by{" "}
-			<a href="http://www.real360.com">Real 360</a>
-		</p>
-	</footer>
-);
+export const Footer = () => {
+	return (
+		<footer className="footer py-2 text-center">
+			<p>© {new Date().getFullYear()} REAL 360. Todos los derechos reservados.</p>
+		</footer>
+	);
+};
