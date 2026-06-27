@@ -14,7 +14,6 @@ export const Services = () => {
             ];
 
     return (
-
         <div>
             <div className="bg-primary-subtle m-2 p-2">
                 <h2 className="jumbotron-title">Servicios</h2>
@@ -32,7 +31,6 @@ export const Services = () => {
                     })}
                 </div>
             </div>
-
         </div>
     )
 }

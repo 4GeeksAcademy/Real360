@@ -1,0 +1,65 @@
+.navbar {
+  /*height: 10vh;*/
+  background-color: white;
+  font-family: "Poppins", sans-serif;
+  color: #021138;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-brand img {
+  height: 50px;
+  width: auto;
+}
+
+.nav-link {
+  color: #021138;
+  text-decoration: none;
+}
+
+.active-link {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse {
+    background: white;
+    padding: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nav-link {
+    font-size: 18px;
+  }
+
+  .btn-login {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.btn-login {
+  display: inline-flex;
+  background-color: white;
+  color: #0d6efd;
+  border: 1px solid #0d6efd;
+
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-login:hover {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}

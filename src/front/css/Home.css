@@ -1,0 +1,140 @@
+/* SECCION DE JUMBOTRON */
+
+.jumbotron {
+  display: flex;
+  height: 40vh;
+  background-color: #c2d0e9;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 992px) {
+  .jumbotron {
+    flex-direction: column-reverse;
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .jumbotron-image img {
+    height: auto;
+    width: 100%;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 768px) {
+  .jumbotron {
+    flex-direction: column-reverse;
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .jumbotron-image img {
+    height: auto;
+    width: 100%;
+    object-fit: contain;
+  }
+}
+
+.jumbotron-content {
+  padding: 3rem;
+}
+
+.jumbotron-image img {
+  height: 100%;
+  object-fit: contain;
+}
+
+/* SECCION DE FEATURES */
+
+.features {
+  background-color: white;
+  display: flex;
+  /*height: 50vh;*/
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.card-img-top {
+  object-fit: cover;
+  height: 200px;
+  width: auto;
+}
+
+
+/* SECCION DE WHATSAPP */
+.whatsapp-cta{
+    background:#f8fbff;
+    border:1px solid #d7e8ff;
+    border-radius:18px;
+    padding:24px 32px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.cta-info{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.cta-icon{
+    width:78px;
+    height:78px;
+    border-radius:50%;
+    background:#25D366;
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:42px;
+
+    box-shadow:0 10px 25px rgba(37,211,102,.25);
+}
+
+.cta-info h5{
+    margin:0;
+    color:#495057;
+    font-weight:500;
+}
+
+.cta-info h2{
+    margin-top:6px;
+    margin-bottom:0;
+    font-size:2rem;
+    font-weight:700;
+    color:#1b2d52;
+}
+
+.whatsapp-cta .btn{
+    padding:.9rem 2rem;
+    font-weight:600;
+    border-radius:10px;
+}
+
+@media (max-width:768px){
+
+    .whatsapp-cta{
+        flex-direction:column;
+        text-align:center;
+        gap:25px;
+    }
+
+    .cta-info{
+        flex-direction:column;
+    }
+
+    .cta-info h2{
+        font-size:1.8rem;
+    }
+
+}
