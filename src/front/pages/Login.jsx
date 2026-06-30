@@ -1,7 +1,8 @@
 
 import { useState } from "react"
 import useGloalReducer from "../hooks/useGlobalReducer";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 import loginFondo from "../assets/img/login-fondo-3.png";
 import "../css/Login.css"
@@ -35,10 +36,10 @@ export const Login = () => {
         dispatch({
             type: "set_user",
             payload: data.user,
-        });
+        });git 
 
         if (response.ok) {
-            navigate("/");
+            navigate("/dashboard");
         }
     }
 
@@ -49,7 +50,7 @@ export const Login = () => {
                     <h2 className="mb-4 fw-bold">
                         Inicia Sesión
                     </h2>
-                    <form onSubmit={handleSubmit}>
+                    <form >
                         <div className="mb-3">
                             <label htmlFor="exampleInputEmail1" className="form-label">Usuario</label>
                             <input type="email" className="form-control" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
