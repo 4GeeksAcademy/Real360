@@ -37,16 +37,17 @@ def login():
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token, user=user.serialize()), 200
 
-@api.route("/register", methods=["POST"])
-def register_user():
-
+@api.route("/signup", methods=["POST"])
+def signup():
+    firstname=request.json.get("firstname", None),
+    lastname=request.json.get("lastname", None),
     email = request.json.get("email", None)
     password = request.json.get("password", None)
 
     if not email or not password:
         return jsonify({"msg": "Field email and field password are required"}), 400
 
-    new_user = User(email, password)
+    new_user = User(firstname, lastname, email, password)
 
     try:
         db.session.add(new_user)

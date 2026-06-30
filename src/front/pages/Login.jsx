@@ -36,7 +36,7 @@ export const Login = () => {
         dispatch({
             type: "set_user",
             payload: data.user,
-        });git 
+        });
 
         if (response.ok) {
             navigate("/dashboard");
