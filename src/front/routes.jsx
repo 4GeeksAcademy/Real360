@@ -13,6 +13,7 @@ import { Contact } from "./pages/Contact";
 import { Blog } from "./pages/Blog";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
+import { ResetPassword } from "./pages/ResetPassword";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,6 +36,7 @@ export const router = createBrowserRouter(
       <Route path="/blog" element={<Blog />} />
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/resetPassword" element={<ResetPassword />} />
     </Route>
   )
 );

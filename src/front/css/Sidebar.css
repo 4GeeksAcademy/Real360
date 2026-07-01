@@ -1,0 +1,12 @@
+.Sidebar-container{
+    height: 100vh;
+}
+
+.sidebar-visible{
+    display: block;
+    width: 250px;
+}
+
+.sidebar-hidden{
+    display: none;
+}

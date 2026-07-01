@@ -14,7 +14,6 @@ export const Dashboard = () => {
 			<DashboardSummary />
 			<RecentActivity />
 			<UpcomingMaintenance />
-			<Sidebar />
 		</>
 	);
 }; 
