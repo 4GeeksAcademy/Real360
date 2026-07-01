@@ -1,0 +1,48 @@
+/* SECCION DE JUMBOTRON */
+
+.jumbotron {
+  display: flex;
+  height: 40vh;
+  background-color: #c2d0e9;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 992px) {
+  .jumbotron {
+    flex-direction: column-reverse;
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .jumbotron-image img {
+    height: auto;
+    width: 100%;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 768px) {
+  .jumbotron {
+    flex-direction: column-reverse;
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .jumbotron-image img {
+    height: auto;
+    width: 100%;
+    object-fit: contain;
+  }
+}
+
+.jumbotron-content {
+  padding: 3rem;
+}
+
+.jumbotron-image img {
+  height: 100%;
+  object-fit: contain;
+}

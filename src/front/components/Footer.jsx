@@ -1,3 +1,5 @@
+import "../css/Footer.css";
+
 export const Footer = () => {
 	return (
 		<footer className="footer py-2 text-center">

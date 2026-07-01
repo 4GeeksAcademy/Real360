@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import "../css/Jumbotron.css";
 import imagen1 from "../assets/img/sistema-real360.png";
 
 export const Jumbotron = () => {

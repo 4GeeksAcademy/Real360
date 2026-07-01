@@ -3,11 +3,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Jumbotron } from "../components/Jumbotron.jsx";
 import { Features } from "../components/Features.jsx";
 import { CallToAction } from "../components/CallToAction.jsx";
-import { WhatsAppCTA } from "../components/WhatsAppCTA.jsx";
 import { useNavigate } from "react-router-dom";
-import "../css/Home.css"
-import "../css/Navbar.css";
-import "../css/Footer.css";
 
 export const Home = () => {
 
