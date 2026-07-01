@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import "../css/Navbar.css";
 import logo from "../assets/img/logo-real360.png";
 
 export const Navbar = () => {

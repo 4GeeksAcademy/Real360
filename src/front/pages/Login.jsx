@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import useGloalReducer from "../hooks/useGlobalReducer";
 import { Link, useNavigate } from "react-router-dom";
