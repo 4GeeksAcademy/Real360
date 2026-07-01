@@ -18,13 +18,13 @@ export const Layout = () => {
 
     return (
         <ScrollToTop>
-            <div className="container layout">
+            {/*<div className="container layout">
                 <Navbar />
                     <Outlet />           
                 <Footer />
-            </div>
+            </div>*/}
             
-            {/*<div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between">
                 <div className="d-flex justify-content-start">
                     <Sidebar isOpen={sideBarOpen}/>
                 </div>
@@ -32,7 +32,7 @@ export const Layout = () => {
                     <Topbar toggleSidebar={toggleSidebar}/>
                     <Outlet /> 
                 </div>
-            </div>*/}
+            </div>
         </ScrollToTop>
     )
 }
