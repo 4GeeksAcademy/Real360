@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 
 export const Topbar = ({ toggleSidebar }) => {
 
+    const { store, dispatch } = useGlobalReducer();
     const navigate = useNavigate();
 
     const resetPassword = () => {
@@ -23,7 +25,8 @@ export const Topbar = ({ toggleSidebar }) => {
                 <i className="fa-solid fa-bell"></i>
                 <div className="dropdown d-flex justify-content-end p-2 m-2">
                     <a className="btn dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown link
+                        {/*Dropdown link*/}
+                        {store.user.email}
                     </a>
 
                     <ul className="dropdown-menu">

@@ -58,7 +58,7 @@ def signup():
 
     return jsonify({"msg": "Created succesfully", "user": new_user.serialize()}), 201
     
-@api.route("/protected", methods=["GET"])
+@api.route("/profile", methods=["GET"])
 @jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
