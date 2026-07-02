@@ -12,15 +12,14 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     rol: Mapped[str] = mapped_column(String(50), nullable=True)
-
+    
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
-    def __init__(self, firstname, lastname, email, password, rol):
+    def __init__(self, firstname, lastname, email, password):
         self.email = email
         self.password = password
         self.firstname = firstname
         self.lastname = lastname
-        self.rol = rol
 
         self.is_active = True
 
