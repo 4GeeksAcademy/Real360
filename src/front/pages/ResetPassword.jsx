@@ -12,6 +12,9 @@ export const ResetPassword = () => {
     return (
         <div>
             <div className="p-2 m-2 w-75">
+                <h2 className="mb-4 fw-bold text-primary">
+                        Actualiza tu Contraseña
+                </h2>
                 <label for="inputPassword5" className="form-label">Contraseña Actual</label>
                 <input type="password" id="inputPassword5" className="form-control m-2" aria-describedby="passwordHelpBlock" />
                 <label for="inputPassword5" className="form-label">Nueva Contraseña</label>

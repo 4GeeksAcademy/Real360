@@ -71,7 +71,7 @@ export const SignUp = () => {
                             </div>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="exampleInputEmail1" className="form-label">Usuario</label>
+                            <label htmlFor="exampleInputEmail1" className="form-label">Correo Electrónico</label>
                             <input type="email" className="form-control" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
                         </div>
                         <div className="mb-3">

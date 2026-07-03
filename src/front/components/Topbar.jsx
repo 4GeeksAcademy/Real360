@@ -8,6 +8,7 @@ export const Topbar = ({ toggleSidebar }) => {
     const navigate = useNavigate();
 
     console.log(store)
+    console.log(store.user);
 
     const resetPassword = () => {
         navigate('/resetPassword'); 
@@ -15,6 +16,11 @@ export const Topbar = ({ toggleSidebar }) => {
 
     const logOut = () => {
         navigate('/login'); 
+    };
+
+    const editProfile = () => {
+        console.log("Entró a editProfile");
+        navigate('/editProfile'); 
     };
 
     return (
@@ -28,15 +34,16 @@ export const Topbar = ({ toggleSidebar }) => {
                 <i className="fa-solid fa-bell"></i>
                 <div className="dropdown d-flex justify-content-end align-items-center">
                     <a className="btn dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src='https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' className='img-topbar'/>
+                        {/*<img src='https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' className='img-topbar'/>*/}
+                        <i className="fa-solid fa-user"></i>
                         <div className='d-flex flex-column ms-2'>
                             <span className="fw-bold">{store.user.firstname} {store.user.lastname}</span>
-                            <small className="text-muted">{store.user.role}</small>
+                            <small className="text-muted">{store.user.rol}</small>
                         </div>
                     </a>
 
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" href="#">Editar Perfil</a></li>
+                        <li><a className="dropdown-item" href="#" onClick={editProfile}>Editar Perfil</a></li>
                         <li><a className="dropdown-item" href="#" onClick={resetPassword}>Actualizar Contraseña</a></li>
                         <li><a className="dropdown-item text-danger" href="#" onClick={logOut}>Cerrar Sesión</a></li>
                     </ul>

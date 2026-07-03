@@ -15,12 +15,12 @@ class User(db.Model):
     
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
-    def __init__(self, firstname, lastname, email, password):
+    def __init__(self, firstname, lastname, email, password, rol):
         self.email = email
         self.password = password
         self.firstname = firstname
         self.lastname = lastname
-
+        self.rol = rol
         self.is_active = True
 
     def serialize(self):
