@@ -10,9 +10,10 @@ export const EditProfile = () => {
     };
 
     return (
-        <div className="row">
-            <div className="col-lg-6 d-flex flex-column justify-content-center align-items-center m-2">
-                <div>
+
+        <div className="container">
+            <div className="row justify-content-center">
+                <div className="col-lg-6 d-flex flex-column justify-content-center align-items-center m-2">
                     <h2 className="mb-4 fw-bold text-primary">
                         Edita tu Perfil
                     </h2>
@@ -34,9 +35,13 @@ export const EditProfile = () => {
                                 <label className="form-label">Número de Departamento</label>
                                 <input type="number" className="form-control" />
                             </div>
+                            <div className="col-md-12 mt-3">
+                                <label className="form-label">Nombre del Edificio</label>
+                                <input type="number" className="form-control" />
+                            </div>
                             <div className="mt-3">
                                 <label className="form-label">Foto de perfil</label>
-                                <input type="file" className="form-control" accept="image/*"/>
+                                <input type="file" className="form-control" accept="image/*" />
                             </div>
                         </div>
                         <button type="submit" className="btn btn-primary"> Actualizar Datos</button>
@@ -44,12 +49,7 @@ export const EditProfile = () => {
                     </form>
                 </div>
             </div>
-            <div className="col-lg-6 d-none d-lg-flex flex-column">
-                <div>
-                    <h2></h2>
-                    <p></p>
-                </div>
-            </div>
         </div>
+
     )
 }
