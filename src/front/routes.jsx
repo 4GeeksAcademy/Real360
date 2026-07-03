@@ -17,6 +17,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { ResetPassword } from "./pages/ResetPassword";
 import { EditProfile } from "./pages/EditProfile";
 import { Budget } from "./pages/Budget";
+import { WaterUsage } from "./pages/WaterUsage";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,6 +44,7 @@ export const router = createBrowserRouter(
       <Route path="/resetPassword" element={<ResetPassword />} />
       <Route path="/editProfile" element={<EditProfile />} />
       <Route path="/budget" element={<Budget />} />
+      <Route path="/water-usage" element={<WaterUsage />} />
     </Route>
   )
 );
