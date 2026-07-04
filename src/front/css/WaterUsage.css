@@ -1,14 +1,14 @@
-.budget-container {
+.water-usage-container {
   height: 93vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-.budget-header {
+.water-usage-header {
   margin:0;
   padding:0;
 }
-.budget-table-container {
+.water-usage-table-container {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -16,22 +16,32 @@
   border-radius: 5px;
 }
 
-.budget-table-container thead {
+.water-usage-table-container thead {
   position: sticky;
   top: 0;
   z-index: 2;
 }
 
 /* Hace más compactas las filas de la tabla */
-.budget-table-container td,
-.budget-table-container th {
+.water-usage-table-container td,
+.water-usage-table-container th {
   padding: 0.35rem 0.5rem;
   font-size: 0.9rem;
 }
 
 /* Reduce la altura de los inputs */
-.budget-table-container .form-control {
+.water-usage-table-container .form-control {
   min-height: 30px;
   padding: 0.2rem 0.45rem;
   font-size: 0.9rem;
+}
+
+/* ESTILOS PARA EL COMPONENTE WaterUsageTable */
+
+.input-readonly {
+    background-color: #f1f3f5 !important;
+    color: #495057;
+    font-weight: 500;
+    border: 1px solid #dee2e6;
+    cursor: not-allowed;
 }
