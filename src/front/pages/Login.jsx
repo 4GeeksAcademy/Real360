@@ -33,6 +33,11 @@ export const Login = () => {
             alert(data.message || "Error al iniciar sesión");
             return;
         }
+        
+        if (!data.access_token || !data.user) {
+            alert("Respuesta inválida del servidor");
+            return;
+        }
 
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
