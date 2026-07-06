@@ -13,9 +13,12 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     firstname: Mapped[str] = mapped_column(String(120))
     lastname: Mapped[str] = mapped_column(String(120))
+    birth_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    rol: Mapped[str] = mapped_column(String(100), nullable=True)
+    profile_image_url: Mapped[str] = mapped_column(String(500), nullable=True)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    rol: Mapped[str] = mapped_column(String(100), nullable=True)
+    
 
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
