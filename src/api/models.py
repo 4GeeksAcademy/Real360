@@ -5,6 +5,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__ = "user"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     firstname: Mapped[str] = mapped_column(String(120))
     lastname: Mapped[str] = mapped_column(String(120))
@@ -13,6 +15,9 @@ class User(db.Model):
     rol: Mapped[str] = mapped_column(String(100), nullable=True)
 
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+
+    def __repr__(self):
+        return self.firstname + " " + self.lastname
 
     def __init__(self, firstname, lastname, rol, email, password ):
         self.firstname = firstname
@@ -34,6 +39,8 @@ class User(db.Model):
         }
 
 class Unit(db.Model):
+    __tablename__ = "unit"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     unit_number: Mapped[int] = mapped_column(Integer)
     building: Mapped[str] = mapped_column(String(120))
@@ -43,10 +50,6 @@ class Unit(db.Model):
 
     id_resident: Mapped [int] = mapped_column (ForeignKey("user.id"))
     resident:Mapped ["User"] = relationship ("User", foreign_keys=[id_resident])
-
-    def __init__(self, unit_number, building ):
-        self.unit_number = unit_number
-        self.building = building
 
     def serialize(self):
         return {
