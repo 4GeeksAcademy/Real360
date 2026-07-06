@@ -24,6 +24,7 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+
 @api.route("/login", methods=["POST"])
 def login():
     email = request.json.get("email", None)
@@ -37,10 +38,11 @@ def login():
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token, user=user.serialize()), 200
 
+
 @api.route("/signup", methods=["POST"])
 def signup():
-    firstname=request.json.get("firstname", None),
-    lastname=request.json.get("lastname", None),
+    firstname = request.json.get("firstname", None),
+    lastname = request.json.get("lastname", None),
     email = request.json.get("email", None)
     password = request.json.get("password", None)
 
@@ -57,10 +59,36 @@ def signup():
         return jsonify({"msg": f"Unexpected {e=}, {type(e)=}"}), 500
 
     return jsonify({"msg": "Created succesfully", "user": new_user.serialize()}), 201
-    
+
+
 @api.route("/profile", methods=["GET"])
 @jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+
+@api.route("/editProfile", methods=["PUT"])
+@jwt_required()
+def update_user():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 401
+
+    body = request.get_json()
+
+    if "fistname" in body:
+        user.firstname = body["firstname"]
+
+    if "lastname" in body:
+        user.lastname = body["lastname"]
+
+    try:
+        db.session.commit()
+        return jsonify({"msg": "Perfil actualizado correctamente"}), 200
+
+    except:
+        db.session.rollback()
+        return jsonify({"msg": "Error al actualizar"})
