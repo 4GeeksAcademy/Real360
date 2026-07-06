@@ -16,9 +16,9 @@ class User(db.Model):
     birth_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     rol: Mapped[str] = mapped_column(String(100), nullable=True)
     profile_image_url: Mapped[str] = mapped_column(String(500), nullable=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    
 
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
@@ -55,7 +55,8 @@ class Unit(db.Model):
     id_owner: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
     owner: Mapped["User"] = relationship("User", foreign_keys=[id_owner])
 
-    id_resident: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
+    id_resident: Mapped[int] = mapped_column(
+        ForeignKey("user.id"), nullable=True)
     resident: Mapped["User"] = relationship("User", foreign_keys=[id_resident])
 
     def __repr__(self):
@@ -97,14 +98,15 @@ class Income(db.Model):
             "id_unit": self.id_unit,
         }
 
+
 class Budget (db.Model):
     __tablename__ = "budget"
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
     building: Mapped[str] = mapped_column(String(120))
-    year : Mapped[int] = mapped_column(Integer, nullable=True)
-    month : Mapped[int] = mapped_column(Integer, nullable=True)
+    year: Mapped[int] = mapped_column(Integer, nullable=True)
+    month: Mapped[int] = mapped_column(Integer, nullable=True)
 
     group: Mapped[str] = mapped_column(String(120), nullable=True)
     category: Mapped[str] = mapped_column(String(120), nullable=True)
@@ -112,10 +114,12 @@ class Budget (db.Model):
 
     currency: Mapped[str] = mapped_column(String(10), nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False)
-    base_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
-    
-    additional_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=0)
-    
+    base_amount: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False)
+
+    additional_amount: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False, default=0)
+
     def serialize(self):
         return {
             "id": self.id,
@@ -129,4 +133,37 @@ class Budget (db.Model):
             "quantity": self.quantity,
             "base_amount": float(self.base_amount),
             "additional_amount": float(self.additional_amount),
+        }
+
+
+class WaterBill (db.Model):
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    provider: Mapped[str] = mapped_column(String(120), nullable=False)
+    supply_number: Mapped[str] = mapped_column(String(50), nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=False)
+    month: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    period_start: Mapped[date] = mapped_column(Date, nullable=False)
+    period_end: Mapped[date] = mapped_column(Date, nullable=False)
+
+    currency: Mapped[str] = mapped_column(String(10), nullable=False)
+    water_usage_total_m3: Mapped[Decimal] = mapped_column(
+        Numeric(10, 3), nullable=False)
+    water_usage_total_cost: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "provider": self.provider,
+            "supply_number": self.supply_number,
+            "year": self.year,
+            "month": self.month,
+            "period_start": self.period_start.isoformat(),
+            "period_end": self.period_end.isoformat(),
+            "currency": self.currency,
+            "water_usage_total_m3": float(self.water_usage_total_m3),
+            "water_usage_total_cost": float(self.water_usage_total_cost)
         }
