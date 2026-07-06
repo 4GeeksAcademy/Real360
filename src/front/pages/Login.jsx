@@ -1,5 +1,5 @@
 import { useState } from "react"
-import useGloalReducer from "../hooks/useGlobalReducer";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 import { Link, useNavigate } from "react-router-dom";
 
 
@@ -7,7 +7,7 @@ import loginFondo from "../assets/img/login-fondo-3.png";
 import "../css/Login.css"
 
 export const Login = () => {
-    const { dispatch } = useGloalReducer();
+    const { store, dispatch } = useGlobalReducer();
     const navigate = useNavigate();
 
     const [user, setUser] = useState({
@@ -28,18 +28,22 @@ export const Login = () => {
 
         const response = await fetch(backendUrl + "/api/login", fetchOptions);
         const data = await response.json();
-        console.log(data.access_token, data.user);
+
+        if (!response.ok) {
+            alert(data.message || "Error al iniciar sesión");
+            return;
+        }
 
         localStorage.setItem("token", data.access_token);
+        localStorage.setItem("user", JSON.stringify(data.user));
 
         dispatch({
             type: "set_user",
             payload: data.user,
         });
 
-        if (response.ok) {
-            navigate("/dashboard");
-        }
+        navigate("/dashboard");
+
     }
 
     return (
