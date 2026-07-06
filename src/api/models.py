@@ -1,8 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Integer, ForeignKey
+from sqlalchemy import String, Boolean, Integer, Float, Date, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import date
+from decimal import Decimal
 
 db = SQLAlchemy()
+
 
 class User(db.Model):
     __tablename__ = "user"
@@ -19,7 +22,7 @@ class User(db.Model):
     def __repr__(self):
         return self.firstname + " " + self.lastname
 
-    def __init__(self, firstname, lastname, rol, email, password ):
+    def __init__(self, firstname, lastname, rol, email, password):
         self.firstname = firstname
         self.lastname = lastname
         self.rol = rol
@@ -38,18 +41,22 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
+
 class Unit(db.Model):
     __tablename__ = "unit"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    unit_number: Mapped[int] = mapped_column(Integer)
+    unit_number: Mapped[int] = mapped_column(Integer, unique=True)
     building: Mapped[str] = mapped_column(String(120))
 
-    id_owner: Mapped [int] = mapped_column (ForeignKey("user.id"))
-    owner:Mapped ["User"] = relationship ("User", foreign_keys=[id_owner])
+    id_owner: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
+    owner: Mapped["User"] = relationship("User", foreign_keys=[id_owner])
 
-    id_resident: Mapped [int] = mapped_column (ForeignKey("user.id"))
-    resident:Mapped ["User"] = relationship ("User", foreign_keys=[id_resident])
+    id_resident: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
+    resident: Mapped["User"] = relationship("User", foreign_keys=[id_resident])
+
+    def __repr__(self):
+        return self.building + " - " + str(self.unit_number)
 
     def serialize(self):
         return {
@@ -58,4 +65,65 @@ class Unit(db.Model):
             "building": self.building,
             "id_owner": self.id_owner,
             "id_resident": self.id_resident
+        }
+
+
+class Income(db.Model):
+    __tablename__ = "income"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    payment_date: Mapped[date] = mapped_column(Date, nullable=False)
+    description: Mapped[str] = mapped_column(String(120), nullable=False)
+    currency: Mapped[str] = mapped_column(String(10), nullable=False)
+    amount_paid: Mapped[float] = mapped_column(Float, nullable=False)
+    operation_number: Mapped[int | None] = mapped_column(
+        Integer, nullable=True)
+
+    id_unit: Mapped[int] = mapped_column(ForeignKey("unit.id"), nullable=False)
+    unit: Mapped["Unit"] = relationship("Unit")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "payment_date": self.payment_date.isoformat(),
+            "description": self.description,
+            "currency": self.currency,
+            "amount_paid": self.amount_paid,
+            "operation_number": self.operation_number,
+            "id_unit": self.id_unit,
+        }
+
+class Budget (db.Model):
+    __tablename__ = "budget"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    building: Mapped[str] = mapped_column(String(120))
+    year : Mapped[int] = mapped_column(Integer, nullable=True)
+    month : Mapped[int] = mapped_column(Integer, nullable=True)
+
+    group: Mapped[str] = mapped_column(String(120), nullable=True)
+    category: Mapped[str] = mapped_column(String(120), nullable=True)
+    description: Mapped[str] = mapped_column(String(120), nullable=True)
+
+    currency: Mapped[str] = mapped_column(String(10), nullable=False)
+    quantity: Mapped[int] = mapped_column(Integer, nullable=False)
+    base_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    
+    additional_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=0)
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "building": self.building,
+            "year": self.year,
+            "month": self.month,
+            "group": self.group,
+            "category": self.category,
+            "description": self.description,
+            "currency": self.currency,
+            "quantity": self.quantity,
+            "base_amount": float(self.base_amount),
+            "additional_amount": float(self.additional_amount),
         }
