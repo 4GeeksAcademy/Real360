@@ -214,8 +214,8 @@ export const WaterUsage = () => {
                     </div>
 
                     <WaterUsageUnit
-                        waterUsageM3Total={Number(waterBill?.water_usage_total_m3 || 0)}
-                        waterBillTotal={Number(waterBill?.water_usage_total_cost || 0)}
+                        waterUsageM3Total={Number(waterBill?.water_usage_total_m3)}
+                        waterBillTotal={Number(waterBill?.water_usage_total_cost)}
                         waterUsageUnits={previousWaterUsageUnits}
                     />
 

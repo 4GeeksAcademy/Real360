@@ -1,37 +1,45 @@
 import { useState, useEffect } from "react"
 import "../css/WaterUsage.css"
 
-export const WaterUsageUnit = ({ water_usage_total_m3_building, water_usage_total_cost_building, waterUsageUnits }) => {
+export const WaterUsageUnit = ({ waterUsageM3Total, waterBillTotal, waterUsageUnits }) => {
     let id = 1;
-    const waterUsageTotalM3Building = Number(water_usage_total_m3_building);
-    const waterUsageTotalCostBuilding = Number(water_usage_total_cost_building);
+
+    const water_usage_m3_building = Number(waterUsageM3Total);
+    const water_usage_cost_building = Number(waterBillTotal);
+
+    console.log("water_usage_m3_building:", water_usage_m3_building);
+    console.log("water_usage_cost_building:", water_usage_cost_building);
+
+    const cost_per_m3 = water_usage_cost_building / water_usage_m3_building;
+
+    console.log("cost_per_m3:", cost_per_m3);
 
     const [waterUsages, setWaterUsages] = useState([
-        { id: id++, building: "Torre 1", unit_number: 101, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 201, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 202, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 203, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 301, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 302, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 303, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 401, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 402, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 403, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 501, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 502, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 503, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 601, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 602, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 603, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 701, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 702, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 703, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 801, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 802, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 803, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 901, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 902, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null },
-        { id: id++, building: "Torre 1", unit_number: 903, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3: 0, water_usage_percentage: 0, water_usage_individual_cost: 0, water_usage_common_cost: 0, water_usage_total_cost: 0, meter_reading_photo: null }
+        { id: id++, building: "Torre 1", unit_number: 101, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 201, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 202, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 203, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 301, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 302, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 303, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 401, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 402, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 403, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 501, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 502, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 503, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 601, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 602, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 603, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 701, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 702, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 703, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 801, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 802, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 803, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 901, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 902, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null },
+        { id: id++, building: "Torre 1", unit_number: 903, previous_reading_m3: 0, current_reading_m3: 0, water_usage_m3_unit_individual: 0, water_usage_cost_unit_individual: 0, water_usage_cost_unit_commons: 0, water_usage_cost_unit: 0, meter_reading_photo: null }
     ]);
 
     const loadPreviousReadings = () => {
@@ -62,6 +70,7 @@ export const WaterUsageUnit = ({ water_usage_total_m3_building, water_usage_tota
     const handleChange = (index, field, value) => {
         setWaterUsages((previousWaterUsages) => {
             const updatedWaterUsages = previousWaterUsages.map((item, itemIndex) => {
+
                 if (itemIndex !== index) return item;
 
                 const updatedItem = {
@@ -69,61 +78,38 @@ export const WaterUsageUnit = ({ water_usage_total_m3_building, water_usage_tota
                     [field]: value
                 };
 
-                const previousReading = Number(updatedItem.previous_reading_m3) || 0;
-                const currentReading = Number(updatedItem.current_reading_m3) || 0;
-                const individualCost = Number(updatedItem.water_usage_individual_cost) || 0;
-                const commonCost = Number(updatedItem.water_usage_common_cost) || 0;
+                const previous_reading_m3 = Number(updatedItem.previous_reading_m3) || 0;
+                const current_reading_m3 = Number(updatedItem.current_reading_m3) || 0;
 
 
-                updatedItem.water_usage_m3 = currentReading - previousReading;
-                /*updatedItem.water_total_cost = individualCost + commonCost;*/
-                updatedItem.water_usage_total_cost = individualCost + commonCost;
+                updatedItem.water_usage_m3_unit_individual = Number((current_reading_m3 - previous_reading_m3).toFixed(3));
+                updatedItem.water_usage_cost_unit_individual = updatedItem.water_usage_m3_unit_individual * cost_per_m3;
 
                 return updatedItem;
             });
 
-            const totalWaterUsage = updatedWaterUsages.reduce(
-                (total, item) => total + (Number(item.water_usage_m3) || 0),
-                0
-            );
-
-            return updatedWaterUsages.map((item) => ({
-                ...item,
-                water_usage_percentage:
-                    totalWaterUsage > 0
-                        ? (Number(item.water_usage_m3) / totalWaterUsage) * 100
-                        : 0
-            }));
+            return updatedWaterUsages;
         });
-    };
+    }
 
-    const totalPreviousReadingM3 = waterUsages.reduce(
-        (total, item) => total + (Number(item.previous_reading_m3) || 0),
+    const previous_reading_m3_total = Number(waterUsages.reduce((total, item) => total + (Number(item.previous_reading_m3) || 0), 0).toFixed(3));
+
+    const current_reading_m3_total = Number(waterUsages.reduce((total, item) => total + (Number(item.current_reading_m3) || 0), 0).toFixed(3));
+
+    const water_usage_m3_unit_individual_total = Number(waterUsages.reduce((total, item) => total + (Number(item.water_usage_m3_unit_individual) || 0), 0).toFixed(3));
+
+    const water_usage_cost_unit_individual_total = waterUsages.reduce(
+        (total, item) => total + (Number(item.water_usage_cost_unit_individual) || 0),
         0
     );
 
-    const totalCurrentReadingM3 = waterUsages.reduce(
-        (total, item) => total + (Number(item.current_reading_m3) || 0),
+    const water_usage_cost_unit_commons_total = waterUsages.reduce(
+        (total, item) => total + (Number(item.water_usage_cost_unit_commons) || 0),
         0
     );
 
-    const totalWaterUsageM3 = waterUsages.reduce(
-        (total, item) => total + (Number(item.water_usage_m3) || 0),
-        0
-    );
-
-    const totalWaterUsageIndividualCost = waterUsages.reduce(
-        (total, item) => total + (Number(item.water_usage_individual_cost) || 0),
-        0
-    );
-
-    const totalWaterUsageCommonCost = waterUsages.reduce(
-        (total, item) => total + (Number(item.water_usage_common_cost) || 0),
-        0
-    );
-
-    const totalWaterUsageTotalCost = waterUsages.reduce(
-        (total, item) => total + (Number(item.water_usage_total_cost) || 0),
+    const water_usage_cost_unit_total = waterUsages.reduce(
+        (total, item) => total + (Number(item.water_usage_cost_unit) || 0),
         0
     );
 
@@ -140,7 +126,6 @@ export const WaterUsageUnit = ({ water_usage_total_m3_building, water_usage_tota
                             <th>Lectura anterior</th>
                             <th>Lectura actual</th>
                             <th>Consumo m3</th>
-                            <th>Consumo %</th>
                             <th>Costo Individual</th>
                             <th>Costo A. Común</th>
                             <th>Costo Total</th>
@@ -173,7 +158,7 @@ export const WaterUsageUnit = ({ water_usage_total_m3_building, water_usage_tota
                                     <input
                                         type="number"
                                         className="form-control input-readonly"
-                                        value={item.water_usage_m3}
+                                        value={item.water_usage_m3_unit_individual}
                                         readOnly
                                     />
 
@@ -182,35 +167,23 @@ export const WaterUsageUnit = ({ water_usage_total_m3_building, water_usage_tota
                                     <input
                                         type="number"
                                         className="form-control input-readonly"
-                                        value={item.water_usage_percentage.toFixed(2)}
+                                        value={item.water_usage_cost_unit_individual}
                                         readOnly
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="number"
-                                        className="form-control"
-                                        value={item.water_usage_individual_cost}
-                                        onChange={(e) =>
-                                            handleChange(index, "water_usage_individual_cost", e.target.value)
-                                        }
-                                    />
-                                </td>
-                                <td>
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        value={item.water_usage_common_cost}
-                                        onChange={(e) =>
-                                            handleChange(index, "water_usage_common_cost", e.target.value)
-                                        }
+                                        className="form-control input-readonly"
+                                        value={item.water_usage_cost_unit_commons}
+                                        readOnly
                                     />
                                 </td>
                                 <td>
                                     <input
                                         type="number"
                                         className="form-control input-readonly"
-                                        value={item.water_usage_total_cost}
+                                        value={item.water_usage_cost_unit}
                                         readOnly
                                     />
                                 </td>
@@ -228,13 +201,12 @@ export const WaterUsageUnit = ({ water_usage_total_m3_building, water_usage_tota
                     <tfoot>
                         <tr className="table-primary fw-bold">
                             <td>TOTALES</td>
-                            <td>{totalPreviousReadingM3}</td>
-                            <td>{totalCurrentReadingM3}</td>
-                            <td>{totalWaterUsageM3}</td>
-                            <td>-</td>
-                            <td>{totalWaterUsageIndividualCost.toFixed(2)}</td>
-                            <td>{totalWaterUsageCommonCost.toFixed(2)}</td>
-                            <td>{totalWaterUsageTotalCost.toFixed(2)}</td>
+                            <td>{previous_reading_m3_total}</td>
+                            <td>{current_reading_m3_total}</td>
+                            <td>{water_usage_m3_unit_individual_total}</td>
+                            <td>{water_usage_cost_unit_individual_total.toFixed(2)}</td>
+                            <td>{water_usage_cost_unit_commons_total.toFixed(2)}</td>
+                            <td>{water_usage_cost_unit_total.toFixed(2)}</td>
                             <td>-</td>
                         </tr>
                     </tfoot>
