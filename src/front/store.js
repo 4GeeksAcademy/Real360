@@ -3,6 +3,7 @@ export const initialStore=()=>{
     message: null,
 
     user: JSON.parse(localStorage.getItem("user")) || null,
+    token: localStorage.getItem("token"),
     
     todos: [
       {
@@ -39,8 +40,16 @@ export default function storeReducer(store, action = {}) {
     case "set_user":
       return {
         ...store,
-        user: action.payload,
+        user: {
+          ...store.user,
+          ...action.payload}
       };
+
+    case "set_token":
+      return {
+        ...store,
+        token: action.payload
+      }
       
     default:
       throw Error('Unknown action.');

@@ -15,11 +15,19 @@ export const Topbar = ({ toggleSidebar }) => {
     };
 
     const logOut = () => {
-        navigate('/login'); 
+        dispatch({
+            type: "set_user",
+            payload: null
+        })
+
+        localStorage.removeItem("user")
+        localStorage.removeItem("token")
+
+        navigate('/login')
+
     };
 
     const editProfile = () => {
-        console.log("Entró a editProfile");
         navigate('/editProfile'); 
     };
 

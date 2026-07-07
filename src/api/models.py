@@ -13,7 +13,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     firstname: Mapped[str] = mapped_column(String(120))
     lastname: Mapped[str] = mapped_column(String(120))
-    birth_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    birth_date: Mapped[str] = mapped_column(String(10), nullable=True)
     rol: Mapped[str] = mapped_column(String(100), nullable=True)
     profile_image_url: Mapped[str] = mapped_column(String(500), nullable=True)
     email: Mapped[str] = mapped_column(
@@ -41,6 +41,7 @@ class User(db.Model):
             "firstname": self.firstname,
             "lastname": self.lastname,
             "rol": self.rol,
+            "birth_date": self.birth_date,
             # do not serialize the password, its a security breach
         }
 

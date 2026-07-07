@@ -10,37 +10,59 @@ export const EditProfile = () => {
 
     const [firstname, setFirstname] = useState(store.user.firstname || "")
     const [lastname, setLastname] = useState(store.user.lastname || "")
-    const [dateTime, setDateTime] = useState(store.user.dateTime || "")
+    const birthDate = store.user.birth_date
+    const formatDateTime = new Date(birthDate).toISOString().split("T")[0]
+    const [dateTime, setDateTime] = useState(formatDateTime || "")
     const [apartmentNumber, setApartmentNumber] = useState(store.user.apartmentNumber || "")
     const [apartmentName, setApartmentName] = useState(store.user.apartmentName || "")
-    const [profileImage, setProfileImage] = useState(store.user.profileImage || "")
+    const [profileImage, setProfileImage] = useState(store.user.profile_image_url || "")
 
-    console.log(firstname)
+    console.log(formatDateTime)
 
 
     const returnToDashboard = () => {
         navigate('/dashboard');
     };
 
-    const updateProfile = () => {
-        fetch('https://scaling-funicular-g49wp9x6qw57c9p5q-3001.app.github.dev/editProfile', {
+    const updateProfile = (event) => {
+        event.preventDefault()
+        fetch('https://scaling-funicular-g49wp9x6qw57c9p5q-3001.app.github.dev/api/editProfile', {
             method: 'PUT',
             body: JSON.stringify({
                 "firstname": firstname,
-                "lastname": lastname
+                "lastname": lastname,
+                "birth_date": dateTime
             }),
             headers: {
                 'Content-Type': 'application/json',
-                'autorization': ''
+                'Authorization': `Bearer ${store.token}`
             }
         })
             .then(res => {
                 if (!res.ok) throw Error(res.statusText);
+                if (res.ok) {
+                    dispatch({
+                        type: "set_user",
+                        payload: {
+                            "firstname": firstname,
+                            "lastname": lastname,
+                            "birth_date": dateTime
+                        }
+                    })
+                    localStorage.setItem("user", JSON.stringify({
+                        ...store.user,
+                        "firstname": firstname,
+                        "lastname": lastname,
+                        "birth_date": dateTime
+                    }));
+                }
                 return res.json();
             })
-            .then(response => console.log('Success:', response))
+            .then(data => console.log(data))
             .catch(error => console.error(error));
+
     }
+
 
     return (
 
@@ -77,7 +99,7 @@ export const EditProfile = () => {
                                 <input type="file" className="form-control" accept="image/*" />
                             </div>
                         </div>
-                        <button type="submit" className="btn btn-primary" onClick={() => updateProfile()}> Actualizar Datos</button>
+                        <button type="submit" className="btn btn-primary" onClick={(event) => updateProfile(event)}> Actualizar Datos</button>
                         <button type="button" className="btn btn-danger m-2" onClick={returnToDashboard}>Cancelar</button>
                     </form>
                 </div>

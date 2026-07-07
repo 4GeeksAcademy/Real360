@@ -33,7 +33,7 @@ export const Login = () => {
             alert(data.message || "Error al iniciar sesión");
             return;
         }
-        
+
         if (!data.access_token || !data.user) {
             alert("Respuesta inválida del servidor");
             return;
@@ -45,6 +45,11 @@ export const Login = () => {
         dispatch({
             type: "set_user",
             payload: data.user,
+        });
+
+        dispatch({
+            type: "set_token",
+            payload: data.access_token,
         });
 
         navigate("/dashboard");
