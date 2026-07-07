@@ -40,7 +40,6 @@ export const WaterUsageUnit = ({ water_usage_total_m3_building, water_usage_tota
 
                 const reading = waterUsageUnits.find(
                     (unit) =>
-                        unit.building === item.building &&
                         unit.unit_number === item.unit_number
                 );
 

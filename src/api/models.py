@@ -204,8 +204,10 @@ class WaterUsageUnit (db.Model):
             "supply_number": self.supply_number,
             "year": self.year,
             "month": self.month,
-            "period_start": self.period_start.isoformat(),
-            "period_end": self.period_end.isoformat(),
+            "building": self.building,
+            "unit_number": self.unit_number,
+            "period_start": self.period_start.isoformat() if self.period_start else None,
+            "period_end": self.period_end.isoformat() if self.period_end else None,
             "meter_reading_m3": float(self.meter_reading_m3),
             "meter_reading_photo": self.meter_reading_photo
         }

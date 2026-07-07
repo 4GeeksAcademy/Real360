@@ -5,10 +5,10 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
 
     const [formData, setFormData] = useState({
         bill_number: "",
-        usage_period_start: "",
-        usage_period_end: "",
-        water_usage_m3_total: "",
-        water_bill_total: ""
+        period_start: "",
+        period_end: "",
+        water_usage_total_m3: "",
+        water_usage_total_cost: ""
     });
 
     const [receiptFile, setReceiptFile] = useState(null);
@@ -57,6 +57,11 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
 
         onSave({
             ...formData,
+
+            year: selectedYear,
+            month: selectedMonth,
+            supply_number: selectedSupplyNumber,
+
             water_bill_attachment: receiptFile
         });
     }

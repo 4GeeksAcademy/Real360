@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, WaterBill
+from api.models import db, User, WaterBill, WaterUsageUnit
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
@@ -95,7 +95,8 @@ def update_user():
     except:
         db.session.rollback()
         return jsonify({"msg": "Error al actualizar"})
-    
+
+
 @api.route("/water-bills", methods=["POST"])
 def create_water_bill():
 
@@ -103,6 +104,8 @@ def create_water_bill():
     file = request.files.get("water_bill_attachment")
 
     new_water_bill = WaterBill(
+        bill_number=form.get("bill_number"),
+
         provider=form.get("provider"),
         supply_number=form.get("supply_number"),
         year=int(form.get("year")),
@@ -121,7 +124,12 @@ def create_water_bill():
 
     try:
         db.session.add(new_water_bill)
+
+        print("Nuevo WaterBill:", new_water_bill)
+
         db.session.commit()
+
+        print("ID generado:", new_water_bill.id)
 
         return jsonify({
             "msg": "Recibo de agua registrado correctamente",
@@ -134,3 +142,35 @@ def create_water_bill():
             "msg": "Error al registrar recibo",
             "error": str(e)
         }), 500
+
+
+@api.route("/water-usage-units/previous", methods=["GET"])
+def get_previous_water_usage_units():
+
+    provider = request.args.get("provider")
+    supply_number = request.args.get("supply_number")
+    year = int(request.args.get("year"))
+    month = int(request.args.get("month"))
+
+    if month == 1:
+        previous_month = 12
+        previous_year = year - 1
+    else:
+        previous_month = month - 1
+        previous_year = year
+
+    previous_units = WaterUsageUnit.query.filter_by(
+        provider=provider,
+        supply_number=supply_number,
+        year=previous_year,
+        month=previous_month
+    ).all()
+
+    return jsonify({
+        "previous_year": previous_year,
+        "previous_month": previous_month,
+        "units": [
+            unit.serialize()
+            for unit in previous_units
+        ]
+    }), 200
