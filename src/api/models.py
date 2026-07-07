@@ -154,6 +154,8 @@ class WaterBill (db.Model):
         Numeric(10, 3), nullable=False)
     water_usage_total_cost: Mapped[Decimal] = mapped_column(
         Numeric(10, 2), nullable=False)
+    
+    water_bill_attachment: Mapped[str] = mapped_column(String(255), nullable = True)
 
     def serialize(self):
         return {
@@ -166,5 +168,37 @@ class WaterBill (db.Model):
             "period_end": self.period_end.isoformat(),
             "currency": self.currency,
             "water_usage_total_m3": float(self.water_usage_total_m3),
-            "water_usage_total_cost": float(self.water_usage_total_cost)
+            "water_usage_total_cost": float(self.water_usage_total_cost),
+            "water_bill_attachment": self.water_bill_attachment
+        }
+
+class WaterUsageUnit (db.Model):
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    provider: Mapped[str] = mapped_column(String(120), nullable=False)
+    supply_number: Mapped[str] = mapped_column(String(50), nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=False)
+    month: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    building: Mapped[str] = mapped_column(String(120))
+    unit_number: Mapped[int] = mapped_column(Integer)
+
+    period_start: Mapped[date] = mapped_column(Date, nullable=True)
+    period_end: Mapped[date] = mapped_column(Date, nullable=True)
+    
+    meter_reading_m3: Mapped[Decimal] = mapped_column(Numeric(10, 3), nullable=False)
+    meter_reading_photo: Mapped[str] = mapped_column(String(255), nullable = True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "provider": self.provider,
+            "supply_number": self.supply_number,
+            "year": self.year,
+            "month": self.month,
+            "period_start": self.period_start.isoformat(),
+            "period_end": self.period_end.isoformat(),
+            "meter_reading_m3": float(self.meter_reading_m3),
+            "meter_reading_photo": self.meter_reading_photo
         }
