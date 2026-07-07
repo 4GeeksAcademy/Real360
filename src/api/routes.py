@@ -79,11 +79,14 @@ def update_user():
 
     body = request.get_json()
 
-    if "fistname" in body:
+    if "firstname" in body:
         user.firstname = body["firstname"]
 
     if "lastname" in body:
         user.lastname = body["lastname"]
+
+    if "birth_date" in body:
+        user.birth_date = body["birth_date"]
 
     try:
         db.session.commit()
