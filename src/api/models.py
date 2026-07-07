@@ -153,6 +153,8 @@ class WaterBill (db.Model):
         Numeric(10, 3), nullable=False)
     water_usage_total_cost: Mapped[Decimal] = mapped_column(
         Numeric(10, 2), nullable=False)
+    
+    water_bill_attachment: Mapped[str] = mapped_column(String(255), nullable = True)
 
     def serialize(self):
         return {
@@ -165,7 +167,8 @@ class WaterBill (db.Model):
             "period_end": self.period_end.isoformat(),
             "currency": self.currency,
             "water_usage_total_m3": float(self.water_usage_total_m3),
-            "water_usage_total_cost": float(self.water_usage_total_cost)
+            "water_usage_total_cost": float(self.water_usage_total_cost),
+            "water_bill_attachment": self.water_bill_attachment
         }
 
 class WaterUsageUnit (db.Model):
