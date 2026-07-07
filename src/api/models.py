@@ -99,6 +99,30 @@ class Income(db.Model):
             "id_unit": self.id_unit,
         }
 
+class Expenses (db.Model):
+    __tablename__ = "expenses"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    expense_date: Mapped[date] = mapped_column(Date, nullable=False)
+    description: Mapped[str] = mapped_column(String(120), nullable=False)
+    currency: Mapped[str] = mapped_column(String(10), nullable=False)
+    expense_amount: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
+    operation_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
+
+    description_detail: Mapped[str] = mapped_column(String(255), nullable=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "expense_date": self.expense_date,
+            "description": self.description,
+            "currency": self.currency,
+            "expense_amount": self.expense_amount,
+            "operation_number": self.operation_number,
+            "description_detail": self.description_detail,
+        }
+
 
 class Budget (db.Model):
     __tablename__ = "budget"
@@ -211,3 +235,60 @@ class WaterUsageUnit (db.Model):
             "meter_reading_m3": float(self.meter_reading_m3),
             "meter_reading_photo": self.meter_reading_photo
         }
+
+
+class MaintenanceFees (db.Model):
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    report_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    emission_date: Mapped[date] = mapped_column(Date, nullable=False)
+    building: Mapped[str] = mapped_column(String(120), nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=False)
+    month: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    unit_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    water_usage_total_cost: Mapped[float] = mapped_column(Numeric(10, 2))
+    electricity_usage_common_cost: Mapped[float] = mapped_column(
+        Numeric(10, 2))
+
+    administration_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=True)
+    security_staff_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=True)
+    cleaning_staff_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=True)
+    elevator_maintenance_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=True)
+    miscellaneous_expenses_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=True)
+    preventive_maintenance_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=True)
+
+    penalty_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=True)
+    total_cost: Mapped[float] = mapped_column(Numeric(10, 2), nullable=True)
+
+
+def serialize(self):
+    return {
+        "id": self.id,
+        "report_number": self.report_number,
+        "building": self.building,
+        "year": self.year,
+        "month": self.month,
+
+        "unit_number": self.unit_number,
+        "water_usage_total_cost": float(self.water_usage_total_cost),
+        "electricity_usage_common_cost": float(self.electricity_usage_common_cost),
+
+        "administration_amount": float(self.administration_amount),
+        "security_staff_amount": float(self.security_staff_amount),
+        "cleaning_staff_amount": float(self.cleaning_staff_amount),
+        "elevator_maintenance_amount": float(self.elevator_maintenance_amount),
+        "miscellaneous_expenses_amount": float(self.miscellaneous_expenses_amount),
+        "preventive_maintenance_amount": float(self.preventive_maintenance_amount),
+
+        "penalty_amount": float(self.penalty_amount),
+        "total_cost": float(self.total_cost)
+    }
