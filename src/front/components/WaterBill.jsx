@@ -1,17 +1,17 @@
 import { useState } from "react";
 import "../css/WaterUsage.css"
 
-export const WaterBillForm = ({ onClose, onSave }) => {
+export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, selectedBuilding, selectedSupplyNumber }) => {
+
     const [formData, setFormData] = useState({
-        supply_number: "",
         bill_number: "",
-        billed_year: "",
-        billed_month: "",
         usage_period_start: "",
         usage_period_end: "",
         water_usage_m3_total: "",
         water_bill_total: ""
     });
+
+    const [receiptFile, setReceiptFile] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,6 +22,26 @@ export const WaterBillForm = ({ onClose, onSave }) => {
         });
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "application/pdf"
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            alert("Solo se permiten imágenes JPG, PNG o archivos PDF.");
+            e.target.value = "";
+            return;
+        }
+
+        setReceiptFile(file);
+    };
+
     const handleSave = () => {
         const hasEmptyFields = Object.values(formData).some((value) => value === "");
 
@@ -29,7 +49,20 @@ export const WaterBillForm = ({ onClose, onSave }) => {
             alert("Completa todos los campos del recibo de agua.");
             return;
         }
-        onSave(formData);
+
+        if (!receiptFile) {
+            alert("Adjunta el recibo de agua.");
+            return;
+        }
+
+        onSave({
+            ...formData,
+            billed_year: selectedYear,
+            billed_month: selectedMonth,
+            building: selectedBuilding,
+            supply_number: selectedSupplyNumber,
+            receipt_photo: receiptFile
+        });
     };
 
     return (
@@ -43,19 +76,14 @@ export const WaterBillForm = ({ onClose, onSave }) => {
                     </div>
 
                     <div className="modal-body">
+                        <div className="alert alert-light border mb-3">
+                            <div><strong>Año:</strong> {selectedYear}</div>
+                            <div><strong>Mes:</strong> {selectedMonth}</div>
+                            <div><strong>Edificio:</strong> {selectedBuilding}</div>
+                            <div><strong>N.° de suministro:</strong> {selectedSupplyNumber}</div>
+                        </div>
                         <form>
                             <div className="row">
-                                <div className="col-md-6 mb-2">
-                                    <input
-                                        type="text"
-                                        name="supply_number"
-                                        value={formData.supply_number}
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        placeholder="N° de suministro"
-                                    />
-                                </div>
-
                                 <div className="col-md-6 mb-2">
                                     <input
                                         type="text"
@@ -64,36 +92,8 @@ export const WaterBillForm = ({ onClose, onSave }) => {
                                         onChange={handleChange}
                                         className="form-control"
                                         placeholder="N° de recibo"
+                                        required
                                     />
-                                </div>
-
-                                <div className="col-md-6 mb-2">
-                                    <input
-                                        type="number"
-                                        name="billed_year"
-                                        value={formData.billed_year}
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        placeholder="Año facturado"
-                                    />
-                                </div>
-
-                                <div className="col-md-6 mb-2">
-                                    <select name="billed_month" value={formData.billed_month} onChange={handleChange} className="form-select" required>
-                                        <option value="">Selecciona un mes</option>
-                                        <option value="1">Enero</option>
-                                        <option value="2">Febrero</option>
-                                        <option value="3">Marzo</option>
-                                        <option value="4">Abril</option>
-                                        <option value="5">Mayo</option>
-                                        <option value="6">Junio</option>
-                                        <option value="7">Julio</option>
-                                        <option value="8">Agosto</option>
-                                        <option value="9">Septiembre</option>
-                                        <option value="10">Octubre</option>
-                                        <option value="11">Noviembre</option>
-                                        <option value="12">Diciembre</option>
-                                    </select>
                                 </div>
 
                                 <div className="col-md-6 mb-2">
@@ -126,6 +126,9 @@ export const WaterBillForm = ({ onClose, onSave }) => {
                                         onChange={handleChange}
                                         className="form-control"
                                         placeholder="Consumo en m³"
+                                        min="0"
+                                        step="0.001"
+                                        required
                                     />
                                 </div>
 
@@ -133,12 +136,26 @@ export const WaterBillForm = ({ onClose, onSave }) => {
                                     <input
                                         type="number"
                                         step="0.01"
+                                        min="0"
                                         name="water_bill_total"
                                         value={formData.water_bill_total}
                                         onChange={handleChange}
                                         className="form-control"
                                         placeholder="Total en soles"
+                                        required
                                     />
+                                </div>
+                                <div className="col-md-12 mb-2">
+                                    <label className="form-label">
+                                        Adjuntar recibo de agua (Imagen o PDF)
+                                    </label>
+                                    <input
+                                        type="file"
+                                        accept="image/png,image/jpeg,application/pdf"
+                                        onChange={handleFileChange}
+                                        className="form-control"
+                                    />
+
                                 </div>
                             </div>
                         </form>

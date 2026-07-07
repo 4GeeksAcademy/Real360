@@ -8,7 +8,7 @@
   margin:0;
   padding:0;
 }
-.water-usage-table-container {
+.water-usage-unit-container {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -16,21 +16,21 @@
   border-radius: 5px;
 }
 
-.water-usage-table-container thead {
+.water-usage-unit-container thead {
   position: sticky;
   top: 0;
   z-index: 2;
 }
 
 /* Hace más compactas las filas de la tabla */
-.water-usage-table-container td,
-.water-usage-table-container th {
+.water-usage-unit-container td,
+.water-usage-unit-container th {
   padding: 0.35rem 0.5rem;
   font-size: 0.9rem;
 }
 
 /* Reduce la altura de los inputs */
-.water-usage-table-container .form-control {
+.water-usage-unit-container .form-control {
   min-height: 30px;
   padding: 0.2rem 0.45rem;
   font-size: 0.9rem;
