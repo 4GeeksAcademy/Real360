@@ -57,13 +57,9 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
 
         onSave({
             ...formData,
-            billed_year: selectedYear,
-            billed_month: selectedMonth,
-            building: selectedBuilding,
-            supply_number: selectedSupplyNumber,
-            receipt_photo: receiptFile
+            water_bill_attachment: receiptFile
         });
-    };
+    }
 
     return (
         <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} >
@@ -100,8 +96,8 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
                                     <label className="form-label">Inicio del periodo</label>
                                     <input
                                         type="date"
-                                        name="usage_period_start"
-                                        value={formData.usage_period_start}
+                                        name="period_start"
+                                        value={formData.period_start}
                                         onChange={handleChange}
                                         className="form-control"
                                     />
@@ -111,8 +107,8 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
                                     <label className="form-label">Fin del periodo</label>
                                     <input
                                         type="date"
-                                        name="usage_period_end"
-                                        value={formData.usage_period_end}
+                                        name="period_end"
+                                        value={formData.period_end}
                                         onChange={handleChange}
                                         className="form-control"
                                     />
@@ -121,8 +117,8 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
                                 <div className="col-md-6 mb-2">
                                     <input
                                         type="number"
-                                        name="water_usage_m3_total"
-                                        value={formData.water_usage_m3_total}
+                                        name="water_usage_total_m3"
+                                        value={formData.water_usage_total_m3}
                                         onChange={handleChange}
                                         className="form-control"
                                         placeholder="Consumo en m³"
@@ -137,8 +133,8 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
                                         type="number"
                                         step="0.01"
                                         min="0"
-                                        name="water_bill_total"
-                                        value={formData.water_bill_total}
+                                        name="water_usage_total_cost"
+                                        value={formData.water_usage_total_cost}
                                         onChange={handleChange}
                                         className="form-control"
                                         placeholder="Total en soles"

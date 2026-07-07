@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, WaterBill
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
@@ -92,3 +92,42 @@ def update_user():
     except:
         db.session.rollback()
         return jsonify({"msg": "Error al actualizar"})
+    
+@api.route("/water-bills", methods=["POST"])
+def create_water_bill():
+
+    form = request.form
+    file = request.files.get("water_bill_attachment")
+
+    new_water_bill = WaterBill(
+        provider=form.get("provider"),
+        supply_number=form.get("supply_number"),
+        year=int(form.get("year")),
+        month=int(form.get("month")),
+
+        period_start=form.get("period_start"),
+        period_end=form.get("period_end"),
+
+        currency=form.get("currency"),
+
+        water_usage_total_m3=form.get("water_usage_total_m3"),
+        water_usage_total_cost=form.get("water_usage_total_cost"),
+
+        water_bill_attachment=file.filename if file else None
+    )
+
+    try:
+        db.session.add(new_water_bill)
+        db.session.commit()
+
+        return jsonify({
+            "msg": "Recibo de agua registrado correctamente",
+            "water_bill": new_water_bill.serialize()
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "msg": "Error al registrar recibo",
+            "error": str(e)
+        }), 500

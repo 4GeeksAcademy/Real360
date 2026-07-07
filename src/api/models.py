@@ -13,7 +13,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     firstname: Mapped[str] = mapped_column(String(120))
     lastname: Mapped[str] = mapped_column(String(120))
-    birth_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    birth_date: Mapped[str] = mapped_column(String(10), nullable=True)
     rol: Mapped[str] = mapped_column(String(100), nullable=True)
     profile_image_url: Mapped[str] = mapped_column(String(500), nullable=True)
     email: Mapped[str] = mapped_column(
@@ -41,6 +41,7 @@ class User(db.Model):
             "firstname": self.firstname,
             "lastname": self.lastname,
             "rol": self.rol,
+            "birth_date": self.birth_date,
             # do not serialize the password, its a security breach
         }
 
@@ -145,6 +146,7 @@ class WaterBill (db.Model):
     year: Mapped[int] = mapped_column(Integer, nullable=False)
     month: Mapped[int] = mapped_column(Integer, nullable=False)
 
+    bill_number: Mapped[str] = mapped_column(String(50), nullable=True)
     period_start: Mapped[date] = mapped_column(Date, nullable=False)
     period_end: Mapped[date] = mapped_column(Date, nullable=False)
 
@@ -153,8 +155,9 @@ class WaterBill (db.Model):
         Numeric(10, 3), nullable=False)
     water_usage_total_cost: Mapped[Decimal] = mapped_column(
         Numeric(10, 2), nullable=False)
-    
-    water_bill_attachment: Mapped[str] = mapped_column(String(255), nullable = True)
+
+    water_bill_attachment: Mapped[str] = mapped_column(
+        String(255), nullable=True)
 
     def serialize(self):
         return {
@@ -163,6 +166,8 @@ class WaterBill (db.Model):
             "supply_number": self.supply_number,
             "year": self.year,
             "month": self.month,
+
+            "bill_number": self.bill_number,
             "period_start": self.period_start.isoformat(),
             "period_end": self.period_end.isoformat(),
             "currency": self.currency,
@@ -170,6 +175,7 @@ class WaterBill (db.Model):
             "water_usage_total_cost": float(self.water_usage_total_cost),
             "water_bill_attachment": self.water_bill_attachment
         }
+
 
 class WaterUsageUnit (db.Model):
 
@@ -185,9 +191,11 @@ class WaterUsageUnit (db.Model):
 
     period_start: Mapped[date] = mapped_column(Date, nullable=True)
     period_end: Mapped[date] = mapped_column(Date, nullable=True)
-    
-    meter_reading_m3: Mapped[Decimal] = mapped_column(Numeric(10, 3), nullable=False)
-    meter_reading_photo: Mapped[str] = mapped_column(String(255), nullable = True)
+
+    meter_reading_m3: Mapped[Decimal] = mapped_column(
+        Numeric(10, 3), nullable=False)
+    meter_reading_photo: Mapped[str] = mapped_column(
+        String(255), nullable=True)
 
     def serialize(self):
         return {

@@ -12,12 +12,17 @@ export const WaterUsage = () => {
     const [showWaterBillModal, setShowWaterBillModal] = useState(false);
 
     const [waterBill, setWaterBill] = useState({
-        billNumber: "",
-        periodStartDate: "",
-        periodEndDate: "",
-        waterUsageM3Total: 0,
-        waterBillTotal: 0,
-        receiptPhoto: null
+        provider: "",
+        supply_number: "",
+        year: "",
+        month: "",
+        period_start: "",
+        period_end: "",
+        currency: "",
+        water_usage_total_m3: 0,
+        water_usage_total_cost: 0,
+        water_bill_attachment: null,
+        building: ""
     });
 
     const waterUsageUnits = [
@@ -34,8 +39,20 @@ export const WaterUsage = () => {
     ];
 
     const handleSaveWaterBill = (billData) => {
-        console.log("Datos del recibo:", billData);
-        setWaterBill(billData);
+
+        const completeWaterBill = {
+            ...billData,
+            provider: "Sedapal",
+            currency: "PEN",
+            year: selectedYear,
+            month: selectedMonth,
+            supply_number: selectedSupplyNumber,
+            building: selectedBuilding
+        };
+
+        console.log("Recibo completo:", completeWaterBill);
+
+        setWaterBill(completeWaterBill);
         setShowWaterBillModal(false);
     };
 
@@ -109,8 +126,8 @@ export const WaterUsage = () => {
 
                     <div className="mt-1">
                         Recibo: {waterBill.bill_number} ·
-                        Consumo total: {waterBill.water_usage_m3_total} m³ ·
-                        Importe total: S/ {waterBill.water_bill_total}
+                        Consumo total: {waterBill.water_usage_total_m3} m³
+                        Importe total: S/ {waterBill.water_usage_total_cost}
                     </div>
                 </div>
             )}
@@ -125,7 +142,11 @@ export const WaterUsage = () => {
                         La lectura anterior se obtendrá del último registro guardado.
                     </div>
 
-                    <WaterUsageUnit waterUsageM3Total={waterBill.waterUsageM3Total} waterBillTotal={waterBill.waterBillTotal} waterUsageUnits={waterUsageUnits} />
+                    <WaterUsageUnit
+                        waterUsageM3Total={Number(waterBill.water_usage_m3_total)}
+                        waterBillTotal={Number(waterBill.water_bill_total)}
+                        waterUsageUnits={waterUsageUnits}
+                    />
 
                     <div className="d-flex justify-content-end">
                         <button className="btn btn-primary w-100" /* onClick={handleSubmit} */ > Calcular consumo de agua </button>
