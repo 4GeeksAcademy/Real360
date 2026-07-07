@@ -21,6 +21,7 @@ import { WaterUsage } from "./pages/WaterUsage";
 import { Payments } from "./pages/Payments";
 import { Maintenance } from "./pages/Maintenance";
 import { Settings } from "./pages/Settings";
+import { PrivateRoute } from "./components/PrivateRoute";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,16 +44,18 @@ export const router = createBrowserRouter(
       <Route path="/blog" element={<Blog />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/payments" element={<Payments />} />
-      <Route path="/maintenance" element={<Maintenance />} />
-      <Route path="/settings" element={<Settings />} />
 
-      <Route path="/resetPassword" element={<ResetPassword />} />
-      <Route path="/editProfile" element={<EditProfile />} />
-      <Route path="/budget" element={<Budget />} />
-      <Route path="/water-usage" element={<WaterUsage />} />
+      <Route element={<PrivateRoute />} >
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/payments" element={<Payments />} />
+        <Route path="/maintenance" element={<Maintenance />} />
+        <Route path="/settings" element={<Settings />} />
+
+        <Route path="/resetPassword" element={<ResetPassword />} />
+        <Route path="/editProfile" element={<EditProfile />} />
+        <Route path="/budget" element={<Budget />} />
+        <Route path="/water-usage" element={<WaterUsage />} />
+      </Route>
     </Route>
   )
 );
