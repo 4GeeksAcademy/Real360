@@ -174,3 +174,31 @@ def get_previous_water_usage_units():
             for unit in previous_units
         ]
     }), 200
+
+
+@api.route("/water-bills/last-six-months", methods=["GET"])
+def get_last_six_water_bills():
+     # La consulta trae los más recientes primero; para el gráfico
+    water_bills = (
+        WaterBill.query
+        .order_by(
+            WaterBill.year.desc(),
+            WaterBill.month.desc()
+        )
+        .limit(6)
+        .all()
+    )
+
+    water_bills.reverse() # los devolvemos de más antiguo a más reciente.
+
+    month_names = [ "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" ]
+
+    result = [
+        {
+            "month_name": f"{month_names[bill.month - 1]} {bill.year}",
+            "water_usage_total_cost": float(bill.water_usage_total_cost)
+        }
+        for bill in water_bills
+    ]
+
+    return jsonify(result), 200

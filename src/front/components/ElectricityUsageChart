@@ -1,0 +1,8 @@
+export const ElectricityUsageChart = () => {
+
+    return (
+        <>
+            <p>En construcción</p>
+        </>
+    );
+};
