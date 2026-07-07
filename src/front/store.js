@@ -3,7 +3,7 @@ export const initialStore = () => {
     message: null,
 
     user: JSON.parse(localStorage.getItem("user")) || null,
-    
+
     todos: [
       {
         id: 1,
