@@ -179,9 +179,61 @@ def get_previous_water_usage_units():
     }), 200
 
 
+@api.route("/water-usage-units", methods=["POST"])
+def create_water_usage_units():
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No se recibieron datos"}), 400
+
+    try:
+        for item in data:
+
+            existing_unit = WaterUsageUnit.query.filter_by(
+                provider=item["provider"],
+                supply_number=item["supply_number"],
+                year=item["year"],
+                month=item["month"],
+                unit_number=item["unit_number"]
+            ).first()
+
+            if existing_unit:
+                # Actualiza la lectura si ya existe
+                existing_unit.meter_reading_m3 = item["meter_reading_m3"]
+                existing_unit.meter_reading_photo = item.get(
+                    "meter_reading_photo")
+
+            else:
+                # Crea un nuevo registro si no existe
+                water_usage_unit = WaterUsageUnit(
+                    provider=item["provider"],
+                    supply_number=item["supply_number"],
+                    year=item["year"],
+                    month=item["month"],
+                    building=item["building"],
+                    unit_number=item["unit_number"],
+                    meter_reading_m3=item["meter_reading_m3"],
+                    meter_reading_photo=item.get("meter_reading_photo")
+                )
+
+                db.session.add(water_usage_unit)
+
+        db.session.commit()
+
+        return jsonify({
+            "message": "Lecturas guardadas correctamente",
+            "total": len(data)
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
 @api.route("/water-bills/last-six-months", methods=["GET"])
 def get_last_six_water_bills():
-     # La consulta trae los más recientes primero; para el gráfico
+    # La consulta trae los más recientes primero; para el gráfico
     water_bills = (
         WaterBill.query
         .order_by(
@@ -192,10 +244,9 @@ def get_last_six_water_bills():
         .all()
     )
 
-    water_bills.reverse() # los devolvemos de más antiguo a más reciente.
-
-    month_names = [ "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" ]
-
+    water_bills.reverse()  # los devolvemos de más antiguo a más reciente.
+    month_names = ["Ene", "Feb", "Mar", "Abr", "May",
+                   "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
     result = [
         {
             "month_name": f"{month_names[bill.month - 1]} {bill.year}",
@@ -203,5 +254,28 @@ def get_last_six_water_bills():
         }
         for bill in water_bills
     ]
-
     return jsonify(result), 200
+
+
+@api.route("/reports/get-water-bill", methods=["GET"])
+def get_water_bill():
+    supply_number = request.args.get("supply_number")
+    year = request.args.get("year", type=int)
+    month = request.args.get("month", type=int)
+
+    water_bill = WaterBill.query.filter_by(
+        supply_number=supply_number,
+        year=year,
+        month=month
+    ).first()
+
+    if not water_bill:
+        return jsonify({
+            "message": "No se encontró el recibo de agua para la selección indicada."
+        }), 404
+
+    return jsonify({
+        "bill_number": water_bill.bill_number,
+        "water_usage_m3_building": float(water_bill.water_usage_total_m3),
+        "water_usage_cost_building": float(water_bill.water_usage_total_cost),
+    }), 200

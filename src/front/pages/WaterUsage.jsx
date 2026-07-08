@@ -28,22 +28,14 @@ export const WaterUsage = () => {
     });
 
     useEffect(() => {
-
-        if (
-            selectedYear &&
-            selectedMonth &&
-            selectedSupplyNumber
-        ) {
+        if (selectedYear && selectedMonth && selectedSupplyNumber) {
             getPreviousWaterUsageUnits();
+            getWaterBill();
         }
-
-    }, [
-        selectedYear,
-        selectedMonth,
-        selectedSupplyNumber
-    ]);
+    }, [selectedYear, selectedMonth, selectedSupplyNumber]);
 
     const getPreviousWaterUsageUnits = async () => {
+        setPreviousWaterUsageUnits([]);
 
         try {
 
@@ -57,13 +49,18 @@ export const WaterUsage = () => {
                 throw new Error(data.error || "Error obteniendo lecturas anteriores");
             }
 
-            console.log("Lecturas mes anterior:", data);
+            console.log("Filtro enviado:", {
+                supply: selectedSupplyNumber,
+                year: selectedYear,
+                month: selectedMonth
+            });
+
+            console.log("Respuesta backend:", data);
 
             setPreviousWaterUsageUnits(data.units);
 
 
         } catch (error) {
-
             console.error(error);
         }
     };
@@ -122,6 +119,48 @@ export const WaterUsage = () => {
             console.error(error);
             alert("Error al registrar recibo");
 
+        }
+    };
+
+    const getWaterBill = async () => {
+        setWaterBill((previousWaterBill) => ({
+            ...previousWaterBill,
+            bill_number: "",
+            water_usage_total_m3: 0,
+            water_usage_total_cost: 0
+        }));
+
+        try {
+            const params = new URLSearchParams({
+                supply_number: selectedSupplyNumber,
+                year: selectedYear,
+                month: selectedMonth
+            });
+
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/reports/get-water-bill?${params}`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "No se pudo obtener el recibo de agua."
+                );
+            }
+
+            setWaterBill((previousWaterBill) => ({
+                ...previousWaterBill,
+                bill_number: data.bill_number,
+                supply_number: selectedSupplyNumber,
+                year: Number(selectedYear),
+                month: Number(selectedMonth),
+                water_usage_total_m3: data.water_usage_m3_building,
+                water_usage_total_cost: data.water_usage_cost_building
+            }));
+
+        } catch (error) {
+            console.error("Error al obtener el recibo de agua:", error);
         }
     };
 
@@ -190,24 +229,26 @@ export const WaterUsage = () => {
                     </div>
                 </div>
             </div>
-            {waterBill.bill_number && (
-                <div className="alert alert-success mb-3">
-                    {/*<strong>Recibo registrado correctamente.</strong>*/}
-
-                    <div className="mt-1">
-                        <strong>Recibo registrado correctamente: </strong>
-                        N°: {waterBill.bill_number} -
-                        Consumo: {waterBill.water_usage_total_m3} m³ -
-                        Total: S/ {waterBill.water_usage_total_cost}
-                    </div>
-                </div>
-            )}
             {!selectedBuilding || !selectedSupplyNumber || !selectedYear || !selectedMonth ? (
                 <div className="alert alert-info">
                     Seleccione el año, mes, edificio y número de suministro para cargar las unidades.
                 </div>
             ) : (
                 <>
+                    {waterBill.water_usage_total_m3 > 0 &&
+                        waterBill.water_usage_total_cost > 0 && (
+                            <div className="alert alert-success mb-3">
+                                <div className="mt-1">
+                                    <strong>Datos del recibo de agua: </strong>
+                                    {waterBill.bill_number && (
+                                        <>N.°: {waterBill.bill_number} - </>
+                                    )}
+                                    Consumo: {waterBill.water_usage_total_m3} m³ -
+                                    Total: S/ {waterBill.water_usage_total_cost}
+                                </div>
+                            </div>
+                        )}
+
                     <div className="alert alert-primary">
                         Registre únicamente la lectura actual (m³) de cada contómetro.
                         La lectura anterior se obtendrá del último registro guardado.
@@ -217,11 +258,12 @@ export const WaterUsage = () => {
                         waterUsageM3Total={Number(waterBill?.water_usage_total_m3)}
                         waterBillTotal={Number(waterBill?.water_usage_total_cost)}
                         waterUsageUnits={previousWaterUsageUnits}
-                    />
 
-                    <div className="d-flex justify-content-end">
-                        <button className="btn btn-primary w-100" /* onClick={handleSubmit} */ > Calcular consumo de agua </button>
-                    </div>
+                        provider="Sedapal"
+                        supplyNumber={selectedSupplyNumber}
+                        year={selectedYear}
+                        month={selectedMonth}
+                    />
                 </>
             )}
             {showWaterBillModal && (<WaterBill
