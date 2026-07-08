@@ -17,21 +17,70 @@ export const EditProfile = () => {
     const [apartmentName, setApartmentName] = useState(store.user.apartmentName || "")
     const [profileImage, setProfileImage] = useState(store.user.profile_image_url || "")
 
-    console.log(formatDateTime)
-
 
     const returnToDashboard = () => {
         navigate('/dashboard');
     };
 
-    const updateProfile = (event) => {
+    const handdleFileCange = (event) => {
+        console.log("File selected: ", event.target.files[0]);
+        const image = event.target.files[0];
+        setProfileImage(image);
+    };
+
+    const uploadtoCloudinary = async () => {
+
+        if (!profileImage) {
+            console.log("No file selected for upload")
+            return
+        }
+
+        const formData = new FormData()
+
+        console.log("Uploading file", formData)
+
+        formData.append("file", profileImage)
+        formData.append("upload_preset", "Real 360")
+
+        try {
+            const response = await fetch("https://api.cloudinary.com/v1_1/dtt1xch7h/image/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await response.json();
+
+            return data.secure_url
+
+        }
+        catch (error) {
+            console.error("Error uploading image:", error)
+        }
+    }
+
+    const updateProfile = async (event) => {
+
         event.preventDefault()
+
+        let profileImageUrl = store.user.profile_image_url
+
+        if (profileImage instanceof File) {
+            profileImageUrl = await uploadtoCloudinary()
+            if (!profileImageUrl) {
+                alert("No fue posible subir la imagen.");
+                return;
+            }
+        }
+        else if(profileImage === null){
+            profileImageUrl = null
+        }
+
         fetch('https://scaling-funicular-g49wp9x6qw57c9p5q-3001.app.github.dev/api/editProfile', {
             method: 'PUT',
             body: JSON.stringify({
                 "firstname": firstname,
                 "lastname": lastname,
-                "birth_date": dateTime
+                "birth_date": dateTime,
+                "profile_image_url": profileImageUrl
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -46,14 +95,16 @@ export const EditProfile = () => {
                         payload: {
                             "firstname": firstname,
                             "lastname": lastname,
-                            "birth_date": dateTime
+                            "birth_date": dateTime,
+                            "profile_image_url": profileImageUrl
                         }
                     })
                     localStorage.setItem("user", JSON.stringify({
                         ...store.user,
                         "firstname": firstname,
                         "lastname": lastname,
-                        "birth_date": dateTime
+                        "birth_date": dateTime,
+                        "profile_image_url": profileImageUrl
                     }));
                 }
                 return res.json();
@@ -62,7 +113,6 @@ export const EditProfile = () => {
             .catch(error => console.error(error));
 
     }
-
 
     return (
 
@@ -96,7 +146,14 @@ export const EditProfile = () => {
                             </div>
                             <div className="mt-3">
                                 <label className="form-label">Foto de perfil</label>
-                                <input type="file" className="form-control" accept="image/*" />
+                                <input type="file" multiple={false} accept="image/*" className="form-control" onChange={handdleFileCange} />
+                                {profileImage && (
+                                    <div className="d-flex align-items-center">
+                                        <img src={profileImage instanceof File ? URL.createObjectURL(profileImage) : profileImage} alt="Selected" className="img-thumbnail object-fit.cover me-2" style={{ width: '100px', height: '100px' }} />
+                                        <span>{profileImage instanceof File ? profileImage.name : "Foto Actual"}</span>
+                                        <button type="button" className="btn btn-warning ms-3" onClick={() => setProfileImage(null)}>Eliminar Imagen</button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <button type="submit" className="btn btn-primary" onClick={(event) => updateProfile(event)}> Actualizar Datos</button>

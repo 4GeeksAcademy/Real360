@@ -88,6 +88,9 @@ def update_user():
     if "birth_date" in body:
         user.birth_date = body["birth_date"]
 
+    if "profile_image_url" in body:
+        user.profile_image_url = body["profile_image_url"]
+
     try:
         db.session.commit()
         return jsonify({"msg": "Perfil actualizado correctamente"}), 200
