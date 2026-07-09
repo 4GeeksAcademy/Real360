@@ -253,15 +253,10 @@ def get_last_six_water_bills():
     )
 
     water_bills.reverse()  # los devolvemos de más antiguo a más reciente.
-<<<<<<< HEAD
 
     month_names = ["Ene", "Feb", "Mar", "Abr", "May",
                    "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
-=======
-    month_names = ["Ene", "Feb", "Mar", "Abr", "May",
-                   "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
->>>>>>> 54d75f79174dc910e27c3ea2c777382d0395ae6b
     result = [
         {
             "month_name": f"{month_names[bill.month - 1]} {bill.year}",
@@ -272,7 +267,6 @@ def get_last_six_water_bills():
     return jsonify(result), 200
 
 
-<<<<<<< HEAD
 @api.route("/electricity-usage", methods=["POST"])
 def create_electricity_bill():
     print(">>> Entró al endpoint de electricidad")
@@ -299,7 +293,6 @@ def create_electricity_bill():
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": str(e)}), 500
-=======
 @api.route("/reports/get-water-bill", methods=["GET"])
 def get_water_bill():
     supply_number = request.args.get("supply_number")
@@ -338,4 +331,3 @@ def get_income_month():
         "year": today.year,
         "month": today.month
     }), 200
->>>>>>> 54d75f79174dc910e27c3ea2c777382d0395ae6b
