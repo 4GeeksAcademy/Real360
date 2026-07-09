@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Integer, Float, Date, Numeric, ForeignKey
+from sqlalchemy import String, Boolean, Integer, Float, Date, Numeric, ForeignKey, UniqueConstraint, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 
 db = SQLAlchemy()
@@ -25,10 +25,9 @@ class User(db.Model):
     def __repr__(self):
         return self.firstname + " " + self.lastname
 
-    def __init__(self, firstname, lastname, rol, email, password):
+    def __init__(self, firstname, lastname, email, password):
         self.firstname = firstname
         self.lastname = lastname
-        self.rol = rol
         self.email = email
         self.password = password
 
@@ -100,6 +99,7 @@ class Income(db.Model):
             "id_unit": self.id_unit,
         }
 
+
 class Expenses (db.Model):
     __tablename__ = "expenses"
 
@@ -108,8 +108,10 @@ class Expenses (db.Model):
     expense_date: Mapped[date] = mapped_column(Date, nullable=False)
     description: Mapped[str] = mapped_column(String(120), nullable=False)
     currency: Mapped[str] = mapped_column(String(10), nullable=False)
-    expense_amount: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
-    operation_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    expense_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=False)
+    operation_number: Mapped[str | None] = mapped_column(
+        String(50), nullable=True)
 
     description_detail: Mapped[str] = mapped_column(String(255), nullable=True)
 
@@ -322,3 +324,50 @@ def serialize(self):
         "penalty_amount": float(self.penalty_amount),
         "total_cost": float(self.total_cost)
     }
+
+
+class UnitDebt (db.Model):
+
+    __table_args__ = (
+        UniqueConstraint(
+            "building",
+            "unit_number",
+            "fee_year",
+            "fee_month",
+            name="unique_unit_debt_period"
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    building: Mapped[str] = mapped_column(String(120), nullable=False)
+    unit_number: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    fee_year: Mapped[int] = mapped_column(Integer, nullable=False)
+    fee_month: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    currency: Mapped[str] = mapped_column(String(10), nullable=False)
+    fee_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    payment_status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
+
+    paid_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2),nullable=False, default=0)
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+    @property 
+    def pending_amount(self): 
+        return self.fee_amount - self.paid_amount
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "building": self.building,
+            "unit_number": self.unit_number,
+            "fee_year": self.fee_year,
+            "fee_month": self.fee_month,
+            "currency": self.currency,
+            "fee_amount": float(self.fee_amount),
+            "payment_status": self.payment_status,
+            "paid_amount": float(self.paid_amount),
+            "pending_amount": float(self.pending_amount),
+            "paid_at": self.paid_at.isoformat() if self.paid_at else None,
+        }

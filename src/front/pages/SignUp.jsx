@@ -36,7 +36,7 @@ export const SignUp = () => {
 
         const backendUrl = import.meta.env.VITE_BACKEND_URL
 
-        const response = await fetch(backendUrl + "api/signup", fetchOptions);
+        const response = await fetch(backendUrl + "/api/signup", fetchOptions);
         const data = await response.json();
         console.log(data.access_token, data.user);
 

@@ -2,12 +2,14 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills
+from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+from datetime import date
+from sqlalchemy import func, extract
 
 api = Blueprint('api', __name__)
 
@@ -46,10 +48,16 @@ def signup():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
 
+    print(firstname)
+    print(lastname)
+    print(email)
+    print(password)
+
     if not email or not password:
         return jsonify({"msg": "Field email and field password are required"}), 400
 
-    new_user = User(firstname, lastname, email, password)
+    new_user = User(firstname=firstname, lastname=lastname,
+                    email=email, password=password)
 
     try:
         db.session.add(new_user)
@@ -179,6 +187,58 @@ def get_previous_water_usage_units():
     }), 200
 
 
+@api.route("/water-usage-units", methods=["POST"])
+def create_water_usage_units():
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No se recibieron datos"}), 400
+
+    try:
+        for item in data:
+
+            existing_unit = WaterUsageUnit.query.filter_by(
+                provider=item["provider"],
+                supply_number=item["supply_number"],
+                year=item["year"],
+                month=item["month"],
+                unit_number=item["unit_number"]
+            ).first()
+
+            if existing_unit:
+                # Actualiza la lectura si ya existe
+                existing_unit.meter_reading_m3 = item["meter_reading_m3"]
+                existing_unit.meter_reading_photo = item.get(
+                    "meter_reading_photo")
+
+            else:
+                # Crea un nuevo registro si no existe
+                water_usage_unit = WaterUsageUnit(
+                    provider=item["provider"],
+                    supply_number=item["supply_number"],
+                    year=item["year"],
+                    month=item["month"],
+                    building=item["building"],
+                    unit_number=item["unit_number"],
+                    meter_reading_m3=item["meter_reading_m3"],
+                    meter_reading_photo=item.get("meter_reading_photo")
+                )
+
+                db.session.add(water_usage_unit)
+
+        db.session.commit()
+
+        return jsonify({
+            "message": "Lecturas guardadas correctamente",
+            "total": len(data)
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
 @api.route("/water-bills/last-six-months", methods=["GET"])
 def get_last_six_water_bills():
     # La consulta trae los más recientes primero; para el gráfico
@@ -193,10 +253,15 @@ def get_last_six_water_bills():
     )
 
     water_bills.reverse()  # los devolvemos de más antiguo a más reciente.
+<<<<<<< HEAD
 
     month_names = ["Ene", "Feb", "Mar", "Abr", "May",
                    "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
+=======
+    month_names = ["Ene", "Feb", "Mar", "Abr", "May",
+                   "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+>>>>>>> 54d75f79174dc910e27c3ea2c777382d0395ae6b
     result = [
         {
             "month_name": f"{month_names[bill.month - 1]} {bill.year}",
@@ -204,10 +269,10 @@ def get_last_six_water_bills():
         }
         for bill in water_bills
     ]
-
     return jsonify(result), 200
 
 
+<<<<<<< HEAD
 @api.route("/electricity-usage", methods=["POST"])
 def create_electricity_bill():
     print(">>> Entró al endpoint de electricidad")
@@ -234,3 +299,43 @@ def create_electricity_bill():
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": str(e)}), 500
+=======
+@api.route("/reports/get-water-bill", methods=["GET"])
+def get_water_bill():
+    supply_number = request.args.get("supply_number")
+    year = request.args.get("year", type=int)
+    month = request.args.get("month", type=int)
+
+    water_bill = WaterBill.query.filter_by(
+        supply_number=supply_number,
+        year=year,
+        month=month
+    ).first()
+
+    if not water_bill:
+        return jsonify({
+            "message": "No se encontró el recibo de agua para la selección indicada."
+        }), 404
+
+    return jsonify({
+        "bill_number": water_bill.bill_number,
+        "water_usage_m3_building": float(water_bill.water_usage_total_m3),
+        "water_usage_cost_building": float(water_bill.water_usage_total_cost),
+    }), 200
+
+@api.route("/dashboard/income/summary", methods=["GET"])
+def get_income_month():
+    today = date.today()
+
+    total_income = db.session.query(func.coalesce(func.sum(Income.amount_paid), 0)
+    ).filter(
+        extract("year", Income.payment_date) == today.year,
+        extract("month", Income.payment_date) == today.month
+    ).scalar()
+
+    return jsonify({
+        "total_income": float(total_income),
+        "year": today.year,
+        "month": today.month
+    }), 200
+>>>>>>> 54d75f79174dc910e27c3ea2c777382d0395ae6b
