@@ -10,19 +10,21 @@ export const Dashboard = () => {
 
 	return (
 		<>
-			<div className="row">
-				<div className="col-12">
-					<DashboardSummary />
-				</div>
-			</div>
-
-			<div className="row mt-4">
-				<div className="col-12 col-lg-6">
-					<WaterUsageChart />
+			<div className="container dashboard">
+				<div className="row">
+					<div className="col-12">
+						<DashboardSummary />
+					</div>
 				</div>
 
-				<div className="col-12 col-lg-6">
-					ElectricityUsageChart
+				<div className="row mt-4">
+					<div className="col-12 col-lg-6">
+						<WaterUsageChart />
+					</div>
+
+					<div className="col-12 col-lg-6">
+						ElectricityUsageChart
+					</div>
 				</div>
 			</div>
 		</>

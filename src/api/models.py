@@ -25,10 +25,9 @@ class User(db.Model):
     def __repr__(self):
         return self.firstname + " " + self.lastname
 
-    def __init__(self, firstname, lastname, rol, email, password):
+    def __init__(self, firstname, lastname, email, password):
         self.firstname = firstname
         self.lastname = lastname
-        self.rol = rol
         self.email = email
         self.password = password
 
@@ -100,6 +99,7 @@ class Income(db.Model):
             "id_unit": self.id_unit,
         }
 
+
 class Expenses (db.Model):
     __tablename__ = "expenses"
 
@@ -108,8 +108,10 @@ class Expenses (db.Model):
     expense_date: Mapped[date] = mapped_column(Date, nullable=False)
     description: Mapped[str] = mapped_column(String(120), nullable=False)
     currency: Mapped[str] = mapped_column(String(10), nullable=False)
-    expense_amount: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
-    operation_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    expense_amount: Mapped[float] = mapped_column(
+        Numeric(10, 2), nullable=False)
+    operation_number: Mapped[str | None] = mapped_column(
+        String(50), nullable=True)
 
     description_detail: Mapped[str] = mapped_column(String(255), nullable=True)
 

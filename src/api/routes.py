@@ -2,12 +2,14 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, WaterBill, WaterUsageUnit
+from api.models import db, User, WaterBill, WaterUsageUnit, Income
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+from datetime import date
+from sqlalchemy import func, extract
 
 api = Blueprint('api', __name__)
 
@@ -46,10 +48,16 @@ def signup():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
 
+    print(firstname)
+    print(lastname)
+    print(email)
+    print(password)
+
     if not email or not password:
         return jsonify({"msg": "Field email and field password are required"}), 400
 
-    new_user = User(firstname, lastname, email, password)
+    new_user = User(firstname=firstname, lastname=lastname,
+                    email=email, password=password)
 
     try:
         db.session.add(new_user)
@@ -278,4 +286,20 @@ def get_water_bill():
         "bill_number": water_bill.bill_number,
         "water_usage_m3_building": float(water_bill.water_usage_total_m3),
         "water_usage_cost_building": float(water_bill.water_usage_total_cost),
+    }), 200
+
+@api.route("/dashboard/income/summary", methods=["GET"])
+def get_income_month():
+    today = date.today()
+
+    total_income = db.session.query(func.coalesce(func.sum(Income.amount_paid), 0)
+    ).filter(
+        extract("year", Income.payment_date) == today.year,
+        extract("month", Income.payment_date) == today.month
+    ).scalar()
+
+    return jsonify({
+        "total_income": float(total_income),
+        "year": today.year,
+        "month": today.month
     }), 200

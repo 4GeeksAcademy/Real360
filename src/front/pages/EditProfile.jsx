@@ -56,6 +56,7 @@ export const EditProfile = () => {
             console.error("Error uploading image:", error)
         }
     }
+    console.log(store.user);
 
     const updateProfile = async (event) => {
 
@@ -65,16 +66,20 @@ export const EditProfile = () => {
 
         if (profileImage instanceof File) {
             profileImageUrl = await uploadtoCloudinary()
+
+            console.log(profileImageUrl);
+
             if (!profileImageUrl) {
                 alert("No fue posible subir la imagen.");
                 return;
             }
         }
-        else if(profileImage === null){
+        else if (profileImage === null) {
             profileImageUrl = null
         }
+        console.log(store.token);
 
-        fetch('https://scaling-funicular-g49wp9x6qw57c9p5q-3001.app.github.dev/api/editProfile', {
+        fetch('https://super-space-xylophone-v667pxg9gj7vhx476-3001.app.github.dev/api/editProfile', {
             method: 'PUT',
             body: JSON.stringify({
                 "firstname": firstname,
