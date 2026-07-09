@@ -22,6 +22,7 @@ import { Payments } from "./pages/Payments";
 import { Maintenance } from "./pages/Maintenance";
 import { Settings } from "./pages/Settings";
 import { PrivateRoute } from "./components/PrivateRoute";
+import { ElectricityUsage } from "./pages/ElectricityUsage";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,6 +56,7 @@ export const router = createBrowserRouter(
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/budget" element={<Budget />} />
         <Route path="/water-usage" element={<WaterUsage />} />
+        <Route path="/electricity-usage" element={<ElectricityUsage />} />
       </Route>
     </Route>
   )

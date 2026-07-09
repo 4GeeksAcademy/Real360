@@ -10,11 +10,6 @@ export const EditProfile = () => {
 
     const [firstname, setFirstname] = useState(store.user.firstname || "")
     const [lastname, setLastname] = useState(store.user.lastname || "")
-    const birthDate = store.user.birth_date
-    const formatDateTime = new Date(birthDate).toISOString().split("T")[0]
-    const [dateTime, setDateTime] = useState(formatDateTime || "")
-    const [apartmentNumber, setApartmentNumber] = useState(store.user.apartmentNumber || "")
-    const [apartmentName, setApartmentName] = useState(store.user.apartmentName || "")
     const [profileImage, setProfileImage] = useState(store.user.profile_image_url || "")
 
 
@@ -131,18 +126,6 @@ export const EditProfile = () => {
                             <div className="col-md-6">
                                 <label className="form-label">Apellido</label>
                                 <input type="text" className="form-control" value={lastname} onChange={event => setLastname(event.target.value)} />
-                            </div>
-                            <div className="col-md-6">
-                                <label className="form-label">Fecha de Nacimiento</label>
-                                <input type="date" className="form-control" value={dateTime} onChange={event => setDateTime(event.target.value)} />
-                            </div>
-                            <div className="col-md-6">
-                                <label className="form-label">Número de Departamento</label>
-                                <input type="text" className="form-control" value={apartmentNumber} onChange={event => setApartmentNumber(event.target.value)} />
-                            </div>
-                            <div className="col-md-12 mt-3">
-                                <label className="form-label">Nombre del Edificio</label>
-                                <input type="text" className="form-control" value={apartmentName} onChange={event => setApartmentName(event.target.value)} />
                             </div>
                             <div className="mt-3">
                                 <label className="form-label">Foto de perfil</label>

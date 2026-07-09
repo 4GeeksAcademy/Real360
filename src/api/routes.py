@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, WaterBill, WaterUsageUnit
+from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
@@ -181,7 +181,7 @@ def get_previous_water_usage_units():
 
 @api.route("/water-bills/last-six-months", methods=["GET"])
 def get_last_six_water_bills():
-     # La consulta trae los más recientes primero; para el gráfico
+    # La consulta trae los más recientes primero; para el gráfico
     water_bills = (
         WaterBill.query
         .order_by(
@@ -192,9 +192,10 @@ def get_last_six_water_bills():
         .all()
     )
 
-    water_bills.reverse() # los devolvemos de más antiguo a más reciente.
+    water_bills.reverse()  # los devolvemos de más antiguo a más reciente.
 
-    month_names = [ "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" ]
+    month_names = ["Ene", "Feb", "Mar", "Abr", "May",
+                   "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
     result = [
         {
@@ -205,3 +206,31 @@ def get_last_six_water_bills():
     ]
 
     return jsonify(result), 200
+
+
+@api.route("/electricity-usage", methods=["POST"])
+def create_electricity_bill():
+    print(">>> Entró al endpoint de electricidad")
+    body = request.get_json()
+
+    new_bill = ElectricityBills(
+        year=2026,
+        month=1,
+        period_start=body["periodStart"],
+        period_end=body["periodEnd"],
+        supply_number=body["supplyNumber"],
+        supply_number_2=body["supplyNumber2"]
+    )
+
+    try:
+        db.session.add(new_bill)
+        db.session.commit()
+
+        return jsonify({
+            "msg": "Guardado correctamente",
+            "bill": new_bill.serialize()
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": str(e)}), 500

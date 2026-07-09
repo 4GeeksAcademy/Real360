@@ -236,6 +236,35 @@ class WaterUsageUnit (db.Model):
             "meter_reading_m3": float(self.meter_reading_m3),
             "meter_reading_photo": self.meter_reading_photo
         }
+    
+
+class ElectricityBills (db.Model):
+
+    __tablename__ = "electricity_bills"
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    provider: Mapped[str] = mapped_column(String(120), nullable=False)
+    supply_number: Mapped[str] = mapped_column(String(50), nullable=False)
+    supply_number_2: Mapped[str] = mapped_column(String(50), nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=False)
+    month: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    period_start: Mapped[date] = mapped_column(Date, nullable=True)
+    period_end: Mapped[date] = mapped_column(Date, nullable=True)
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "provider": self.provider,
+            "supply_number": self.supply_number,
+            "supply_number_2": self.supply_number_2,
+            "year": self.year,
+            "month": self.month,
+            "period_start": self.period_start.isoformat() if self.period_start else None,
+            "period_end": self.period_end.isoformat() if self.period_end else None,
+        }
 
 
 class MaintenanceFees (db.Model):

@@ -16,6 +16,12 @@ export const Sidebar = ({ isOpen }) => {
     const goToWaterReport = () => {
         navigate('/water-usage')
     }
+    const goToElectricityReport = () => {
+        navigate('/electricity-usage')
+    }
+    const goToBudgetReport = () => {
+        navigate('/budget')
+    }
     const goToMaintenance = () => {
         navigate('/maintenance')
     }
@@ -37,9 +43,10 @@ export const Sidebar = ({ isOpen }) => {
                     <i className={`fa-solid ${reportsOpen ? "fa-chevron-up" : "fa-chevron-down"}`}></i>
                 </button>
                 {reportsOpen && (
-                    <div>
-                        <button type="button" className="btn btn-info m-2" onClick={goToWaterReport} >Reporte de Consumo de Agua</button>
-                        <button type="button" className="btn btn-info m-2" >Reporte de Consumo de Energía</button>
+                    <div className="d-flex row justify-content-center m-2">
+                        <button type="button" className="btn btn-info m-2" onClick={goToWaterReport} >Consumo de Agua</button>
+                        <button type="button" className="btn btn-info m-2" onClick={goToElectricityReport}>Consumo de Energía</button>
+                        <button type="button" className="btn btn-info m-2" onClick={goToBudgetReport}>Presupuesto</button>
                     </div>
                 )}
                 <button type="button" className="btn btn-primary" onClick={goToMaintenance}>Mantenimiento</button>
