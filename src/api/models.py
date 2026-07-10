@@ -261,7 +261,7 @@ class ElectricityBills (db.Model):
             "provider": self.provider,
             "supply_number": self.supply_number,
             "supply_number_2": self.supply_number_2,
-            "year": self.year,clear
+            "year": self.year,
             "month": self.month,
             "period_start": self.period_start.isoformat() if self.period_start else None,
             "period_end": self.period_end.isoformat() if self.period_end else None,
