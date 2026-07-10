@@ -1,123 +1,113 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Payments = () => {
 
     const [selectedDebts, setSelectedDebts] = useState([]);
+    const [unitDebts, setUnitDebts] = useState([]);
 
-    const debts = [
-        {
-            id: 1,
-            apartment: "701",
-            month: "Junio",
-            amount: 318.35
-        },
-        {
-            id: 2,
-            apartment: "502",
-            month: "Junio",
-            amount: 340.21
-        },
-        {
-            id: 3,
-            apartment: "801",
-            month: "Junio",
-            amount: 323.94
-        },
-        {
-            id: 4,
-            apartment: "802",
-            month: "Junio",
-            amount: 294.54
-        },
-        {
-            id: 5,
-            apartment: "703",
-            month: "Junio",
-            amount: 278.25
-        },
-        {
-            id: 6,
-            apartment: "302",
-            month: "Junio",
-            amount: 277.06
+    useEffect(() => {
+        const getUnitDebts = async () => {
+            try {
+                const url = `${import.meta.env.VITE_BACKEND_URL}/api/unit-debts`;
+                const response = await fetch(url);
+                const text = await response.text();
+                const data = JSON.parse(text);
+
+                console.log(data);
+
+                if (!response.ok) {
+                    throw new Error(data.msg || "No se pudieron cargar los datos");
+                }
+
+                setUnitDebts(data);
+            } catch (error) {
+                console.error("Error cargando los datos:", error);
+            }
+        };
+
+        getUnitDebts();
+
+    }, []);
+
+    const handleCheckboxChange = (id) => {
+
+        if (selectedDebts.includes(id)) {
+            // Si ya estaba seleccionado, lo quitamos
+            setSelectedDebts(
+                selectedDebts.filter(debtId => debtId !== id)
+            );
+        } else {
+            // Si no estaba seleccionado, lo agregamos
+            setSelectedDebts([
+                ...selectedDebts,
+                id
+            ]);
         }
-    ];
+    };
+
+    const handleVoucher = () => {
+        console.log("Deudas seleccionadas:", selectedDebts);
+    };
+
+    const today = new Date().toLocaleDateString("es-PE");
 
     return (
         <div className="container mt-4">
-            <h2 className="text-center">
-                REPORTE DE DEUDA
-            </h2>
-
-            <p className="text-center">
-                Fecha de corte:
-                <strong> 05/07/2026</strong>
-            </p>
-            <table className="table table-bordered">
-                <thead className="table-primary">
-                    <tr>
-                        <th>
-                            Dpto.
-                        </th>
-                        <th>
-                            Junio
-                        </th>
-                        <th>
-                            Saldo Total
-                        </th>
-                        <th>
-                            Seleccionar
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {debts.map((debt)=>(
-                        <tr key={debt.id}>
-                            <td>
-                                {debt.apartment}
-                            </td>
-                            <td>
-                                {debt.amount.toFixed(2)}
-                            </td>
-                            <td>
-                                {debt.amount.toFixed(2)}
-                            </td>
-                            <td className="text-center">
-                                <input
-                                    type="checkbox"
-                                    checked={
-                                        selectedDebts.includes(debt.id)
-                                    }
-                                />
-
-                            </td>
-                        </tr>
-                    ))}
-                    <tr>
-                        <td>
-                            <strong>TOTAL</strong>
-                        </td>
-                        <td>
-                            <strong>
-                                1832.35
-                            </strong>
-                        </td>
-                        <td>
-                            <strong>
-                                1832.35
-                            </strong>
-                        </td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-            {
-                selectedDebts.length > 0 &&
-                <div className="mt-3">
-                    <button  className="btn btn-success me-2"  >  💳 Pagar en línea  </button>
-                    <button  className="btn btn-primary"  onClick={handleVoucher} > 📎 Adjuntar voucher  </button>
+            <div className="row justify-content-center">
+                <div className="col-lg-6">
+                    <h2 className="text-center">
+                        REPORTE DE DEUDA
+                    </h2>
+                    <p className="text-center">  {/*Fecha de corte:  <strong> {today}</strong>*/} </p>
+                    <table className="table table-bordered text-center align-middle">
+                        <thead className="table-primary">
+                            <tr>
+                                <th>
+                                    Dpto.
+                                </th>
+                                <th>
+                                    Mes
+                                </th>
+                                <th>
+                                    Deuda
+                                </th>
+                                <th>
+                                    Seleccionar
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {unitDebts.map((debt) => (
+                                <tr key={debt.id}>
+                                    <td>
+                                        {debt.unit_number}
+                                    </td>
+                                    <td>
+                                        {debt.fee_year}/{debt.fee_month}
+                                    </td>
+                                    <td>
+                                        {debt.pending_amount.toFixed(2)}
+                                    </td>
+                                    <td className="text-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedDebts.includes(debt.id)}
+                                            onChange={() => handleCheckboxChange(debt.id)}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {
+                        selectedDebts.length > 0 &&
+                        <div className="mt-4 d-flex justify-content-center">
+                            <button className="btn btn-primary me-2" onClick={handleVoucher} > 📎 Adjuntar voucher  </button>
+                            <button className="btn btn-success" disabled >  💳 Pagar en línea  </button>
+                        </div>
+                    }
                 </div>
-            }
+            </div>
         </div>
     );
 };

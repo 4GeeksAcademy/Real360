@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income, UnitDebt, Budget, Expenses
+from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income, UnitDebt, Budget, Expenses, ElectricityBill, UnitDebt
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
@@ -418,19 +418,34 @@ def get_last_six_water_bills():
 @api.route("/electricity-bills/last-six-months", methods=["GET"])
 def get_last_six_electricity_bills():
 
-    electricity_bills = (
-        ElectricityBills.query
+    electricity_bill = (
+        ElectricityBill.query
         .order_by(
-            ElectricityBills.year.desc(),
-            ElectricityBills.month.desc()
+            ElectricityBill.year.desc(),
+            ElectricityBill.month.desc()
         )
         .limit(6)
         .all()
     )
 
-    electricity_bills.reverse()
+    electricity_bill.reverse()
 
     return jsonify([
         bill.serialize()
-        for bill in electricity_bills
+        for bill in electricity_bill
     ])
+
+@api.route("/unit-debts", methods=["GET"])
+def get_unit_debts():
+
+    unit_debts = (
+        UnitDebt.query
+        .order_by(
+            UnitDebt.building,
+            UnitDebt.unit_number,
+            UnitDebt.fee_year.desc(),
+            UnitDebt.fee_month.desc()
+        )
+        .all()
+    )
+    return jsonify([debt.serialize() for debt in unit_debts]), 200

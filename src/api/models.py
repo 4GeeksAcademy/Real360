@@ -376,3 +376,38 @@ class UnitDebt (db.Model):
             "pending_amount": float(self.pending_amount),
             "paid_at": self.paid_at.isoformat() if self.paid_at else None,
         }
+
+class ElectricityBill (db.Model):
+
+    __tablename__ = "electricity_bill"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    provider: Mapped[str] = mapped_column(String(120), nullable=False)
+    building: Mapped[str] = mapped_column(String(120))
+    supply_number_1: Mapped[str] = mapped_column(String(50), nullable=False)
+    supply_number_2: Mapped[str] = mapped_column(String(50), nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=False)
+    month: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    period_start: Mapped[date] = mapped_column(Date, nullable=True)
+    period_end: Mapped[date] = mapped_column(Date, nullable=True)
+
+    electricity_usage_total_cost_1: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False)
+    electricity_usage_total_cost_2: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "provider": self.provider,
+            "supply_number_1": self.supply_number,
+            "supply_number_2": self.supply_number_2,
+            "year": self.year,
+            "month": self.month,
+            "period_start": self.period_start.isoformat() if self.period_start else None,
+            "period_end": self.period_end.isoformat() if self.period_end else None,
+            "electricity_usage_total_cost": float(self.electricity_usage_total_cost_1 + self.electricity_usage_total_cost_2)
+    }
+
