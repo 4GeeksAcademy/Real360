@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income
+from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income, UnitDebt, Budget, Expenses
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
@@ -239,34 +239,6 @@ def create_water_usage_units():
         return jsonify({"error": str(e)}), 500
 
 
-@api.route("/water-bills/last-six-months", methods=["GET"])
-def get_last_six_water_bills():
-    # La consulta trae los más recientes primero; para el gráfico
-    water_bills = (
-        WaterBill.query
-        .order_by(
-            WaterBill.year.desc(),
-            WaterBill.month.desc()
-        )
-        .limit(6)
-        .all()
-    )
-
-    water_bills.reverse()  # los devolvemos de más antiguo a más reciente.
-
-    month_names = ["Ene", "Feb", "Mar", "Abr", "May",
-                   "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
-
-    result = [
-        {
-            "month_name": f"{month_names[bill.month - 1]} {bill.year}",
-            "water_usage_total_cost": float(bill.water_usage_total_cost)
-        }
-        for bill in water_bills
-    ]
-    return jsonify(result), 200
-
-
 @api.route("/electricity-usage", methods=["POST"])
 def create_electricity_bill():
     print(">>> Entró al endpoint de electricidad")
@@ -293,6 +265,8 @@ def create_electricity_bill():
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": str(e)}), 500
+
+
 @api.route("/reports/get-water-bill", methods=["GET"])
 def get_water_bill():
     supply_number = request.args.get("supply_number")
@@ -316,12 +290,42 @@ def get_water_bill():
         "water_usage_cost_building": float(water_bill.water_usage_total_cost),
     }), 200
 
+
+@api.route("/dashboard/budget/summary", methods=["GET"])
+def get_budget_summary():
+
+    today = date.today()
+
+    total_budget = (
+        db.session.query(
+            func.coalesce(
+                func.sum(
+                    (Budget.base_amount * Budget.quantity)
+                    + Budget.additional_amount
+                ),
+                0
+            )
+        )
+        .filter(
+            Budget.year == today.year,
+            Budget.month == today.month
+        )
+        .scalar()
+    )
+
+    return jsonify({
+        "total_budget": float(total_budget),
+        "year": today.year,
+        "month": today.month
+    }), 200
+
+
 @api.route("/dashboard/income/summary", methods=["GET"])
 def get_income_month():
     today = date.today()
 
     total_income = db.session.query(func.coalesce(func.sum(Income.amount_paid), 0)
-    ).filter(
+                                    ).filter(
         extract("year", Income.payment_date) == today.year,
         extract("month", Income.payment_date) == today.month
     ).scalar()
@@ -331,3 +335,102 @@ def get_income_month():
         "year": today.year,
         "month": today.month
     }), 200
+
+
+@api.route("/dashboard/expenses/summary", methods=["GET"])
+def get_expenses_month():
+
+    today = date.today()
+
+    total_expenses = (
+        db.session.query(
+            func.coalesce(
+                func.sum(Expenses.expense_amount),
+                0
+            )
+        )
+        .filter(
+            extract("year", Expenses.expense_date) == today.year,
+            extract("month", Expenses.expense_date) == today.month
+        )
+        .scalar()
+    )
+
+    return jsonify({
+        "total_expenses": float(total_expenses),
+        "year": today.year,
+        "month": today.month
+    }), 200
+
+
+@api.route("/dashboard/debt/summary", methods=["GET"])
+def get_debt_summary():
+
+    total_debt = (
+        db.session.query(
+            func.coalesce(
+                func.sum(
+                    UnitDebt.fee_amount - UnitDebt.paid_amount
+                ),
+                0
+            )
+        )
+        .filter(
+            UnitDebt.payment_status != "paid"
+        )
+        .scalar()
+    )
+
+    return jsonify({
+        "total_debt": float(total_debt)
+    }), 200
+
+
+@api.route("/water-bills/last-six-months", methods=["GET"])
+def get_last_six_water_bills():
+    # La consulta trae los más recientes primero; para el gráfico
+    water_bills = (
+        WaterBill.query
+        .order_by(
+            WaterBill.year.desc(),
+            WaterBill.month.desc()
+        )
+        .limit(6)
+        .all()
+    )
+
+    water_bills.reverse()  # los devolvemos de más antiguo a más reciente.
+
+    month_names = ["Ene", "Feb", "Mar", "Abr", "May",
+                   "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+
+    result = [
+        {
+            "month_name": f"{month_names[bill.month - 1]} {bill.year}",
+            "water_usage_total_cost": float(bill.water_usage_total_cost)
+        }
+        for bill in water_bills
+    ]
+
+    return jsonify(result), 200
+
+
+@api.route("/electricity-bills/last-six-months", methods=["GET"])
+def get_last_six_electricity_bills():
+
+    electricity_bills = (
+        ElectricityBills.query
+        .order_by(
+            ElectricityBills.year.desc(),
+            ElectricityBills.month.desc()
+        )
+        .limit(6)
+        .all()
+    )
+
+    electricity_bills.reverse()
+
+    return jsonify([
+        bill.serialize()
+        for bill in electricity_bills
+    ])
