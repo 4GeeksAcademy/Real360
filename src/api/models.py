@@ -242,7 +242,7 @@ class WaterUsageUnit (db.Model):
 
 class ElectricityBills (db.Model):
 
-    __tablename__ = "electricity_bills"
+    _tablename_ = "electricity_bills"
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
@@ -255,23 +255,17 @@ class ElectricityBills (db.Model):
     period_start: Mapped[date] = mapped_column(Date, nullable=True)
     period_end: Mapped[date] = mapped_column(Date, nullable=True)
 
-    electricity_usage_total_cost_1: Mapped[Decimal] = mapped_column(
-        Numeric(10, 2), nullable=False)
-    electricity_usage_total_cost_2: Mapped[Decimal] = mapped_column(
-        Numeric(10, 2), nullable=False)
-
     def serialize(self):
         return {
             "id": self.id,
             "provider": self.provider,
             "supply_number": self.supply_number,
             "supply_number_2": self.supply_number_2,
-            "year": self.year,
+            "year": self.year,clear
             "month": self.month,
             "period_start": self.period_start.isoformat() if self.period_start else None,
             "period_end": self.period_end.isoformat() if self.period_end else None,
-            "electricity_usage_total_cost": float(self.electricity_usage_total_cost_1 + self.electricity_usage_total_cost_2)
-    }
+        }
 
 
 class MaintenanceFees (db.Model):
@@ -353,12 +347,14 @@ class UnitDebt (db.Model):
 
     currency: Mapped[str] = mapped_column(String(10), nullable=False)
     fee_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
-    payment_status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
+    payment_status: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="pending")
 
-    paid_amount: Mapped[Decimal]= mapped_column(Numeric(10, 2), nullable=False, default=0)
+    paid_amount: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2), nullable=False, default=0)
     paid_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
-    @ property
+    @property
     def pending_amount(self):
         return self.fee_amount - self.paid_amount
 
@@ -376,6 +372,7 @@ class UnitDebt (db.Model):
             "pending_amount": float(self.pending_amount),
             "paid_at": self.paid_at.isoformat() if self.paid_at else None,
         }
+
 
 class ElectricityBill (db.Model):
 
@@ -409,5 +406,4 @@ class ElectricityBill (db.Model):
             "period_start": self.period_start.isoformat() if self.period_start else None,
             "period_end": self.period_end.isoformat() if self.period_end else None,
             "electricity_usage_total_cost": float(self.electricity_usage_total_cost_1 + self.electricity_usage_total_cost_2)
-    }
-
+        }
