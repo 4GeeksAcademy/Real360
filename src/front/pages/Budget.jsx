@@ -35,7 +35,7 @@ export const Budget = () => {
   const years = [2026, 2027, 2028];
 
   const handleChange = (index, field, value) => {
-    setBudget((prev) => {
+    setBudget((prev) => { s
       const updated = [...prev];
       const item = { ...updated[index] };
 
