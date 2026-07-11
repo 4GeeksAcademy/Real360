@@ -29,7 +29,7 @@ export const Layout = () => {
                 <div className="d-flex justify-content-start">
                     <Sidebar isOpen={sideBarOpen}/>
                 </div>
-                <div className="w-100">
+                <div className="w-100 right-container">
                     <Topbar toggleSidebar={toggleSidebar}/>
                     <Outlet /> 
                 </div>

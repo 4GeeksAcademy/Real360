@@ -1,4 +1,4 @@
-.water-chart-card {
+.chart-card {
     width: 100%;
     padding: 16px;
     background: white;
@@ -7,25 +7,25 @@
     box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
 }
 
-.water-chart-header {
+.chart-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
 }
 
-.water-chart-header h5 {
+.chart-header h5 {
     margin: 0;
     font-size: 1rem;
     font-weight: 700;
 }
 
-.water-chart-period {
+.chart-period {
     font-size: 0.8rem;
     color: #6b7280;
 }
 
-.water-chart-content {
+.chart-content {
     width: 100%;
     height: 220px;
 }
