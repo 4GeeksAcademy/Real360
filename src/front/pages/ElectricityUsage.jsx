@@ -1,13 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export const ElectricityUsage = () => {
 
-    const [electricityBills, setElectricityBills] = useState({
-        periodStart: "",
-        periodEnd: "",
-        supplyNumber: "",
-        supplyNumber2: "",
-    })
+    const [electricityBills, setElectricityBills] = useState([])
 
     const saveBills = async () => {
         console.log(electricityBills)
@@ -24,6 +19,115 @@ export const ElectricityUsage = () => {
 
         console.log("Status:", response.status);
         console.log("Respuesta:", data);
+
+        if(response.ok){
+            getData()
+        }
+    }
+
+    const months = [
+        {
+            id: 1,
+            name: "Enero"
+        },
+        {
+            id: 2,
+            name: "Febrero"
+        },
+        {
+            id: 3,
+            name: "Marzo"
+        },
+        {
+            id: 4,
+            name: "Abril"
+        },
+        {
+            id: 5,
+            name: "Mayo"
+        },
+        {
+            id: 6,
+            name: "Junio"
+        },
+        {
+            id: 7,
+            name: "Julio"
+        },
+        {
+            id: 8,
+            name: "Agosto"
+        },
+        {
+            id: 9,
+            name: "Septiembre"
+        },
+        {
+            id: 10,
+            name: "Octubre"
+        },
+        {
+            id: 11,
+            name: "Noviembre"
+        },
+        {
+            id: 12,
+            name: "Diciembre"
+        }
+    ]
+
+    const getData = () => {
+        fetch('https://scaling-funicular-g49wp9x6qw57c9p5q-3001.app.github.dev/api/electricity-usage')
+
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText)
+                }
+                return response.json()
+            })
+            .then(responseAsJson => {
+                const completeBills = months.map((month) => {
+                    const bill = responseAsJson.find((bill) => Number(bill.month) === Number(month.id))
+                    if (!bill) {
+                        return {
+                            id: `temp-${month.id}`,
+                            month: month.id,
+                            year: 2026,
+                            period_start: "",
+                            period_end: "",
+                            supply_number: "",
+                            supply_number_2: "",
+                        }
+                    }
+                    return bill
+                })
+
+                console.log("Respuesta del servidor:");
+                console.log(responseAsJson);
+
+                setElectricityBills(completeBills);
+            })
+            .catch(error => {
+                console.log('Looks like there was a problem: \n', error);
+            })
+    }
+
+    useEffect(() => {
+        getData()
+    }, [])
+
+    const handleFieldChange = (id, field, value) => {
+
+        const updateBills = electricityBills.map((bill) => {
+            if (bill.id === id) {
+                return {
+                    ...bill,
+                    [field]: value
+                }
+            }
+            return bill
+        })
+        setElectricityBills(updateBills)
     }
 
     return (
@@ -40,97 +144,56 @@ export const ElectricityUsage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Enero</td>
-                        <td><input type="date" className="form-control" value={electricityBills.periodStart} onChange={
-                            (event) => setElectricityBills({
-                                ...electricityBills,
-                                periodStart: event.target.value
-                            })} /></td>
-                        <td><input type="date" className="form-control" value={electricityBills.periodEnd} onChange={
-                            (event) => setElectricityBills({
-                                ...electricityBills,
-                                periodEnd: event.target.value
-                            })
-                        } /></td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" value={electricityBills.supplyNumber} onChange={
-                                    (event) => setElectricityBills({
-                                        ...electricityBills,
-                                        supplyNumber: event.target.value
-                                    })
-                                } />
-                            </div>
-                        </td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" value={electricityBills.supplyNumber2} onChange={
-                                    (event) => setElectricityBills({
-                                        ...electricityBills,
-                                        supplyNumber2: event.target.value
-                                    })
-                                } />
-                            </div>
-                        </td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" value={
-                                    Number(electricityBills.supplyNumber || 0) + Number(electricityBills.supplyNumber2 || 0)
-                                }
-                                    readOnly />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Febrero</td>
-                        <td><input type="date" className="form-control" /></td>
-                        <td><input type="date" className="form-control" /></td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" />
-                            </div>
-                        </td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" />
-                            </div>
-                        </td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Marzo</td>
-                        <td><input type="date" className="form-control" /></td>
-                        <td><input type="date" className="form-control" /></td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" />
-                            </div>
-                        </td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" />
-                            </div>
-                        </td>
-                        <td>
-                            <div className="input-group">
-                                <span className="input-group-text">S/</span>
-                                <input type="number" className="form-control" placeholder="0.00" />
-                            </div>
-                        </td>
-                    </tr>
+                    {electricityBills.map((bill) => {
+
+                        const currentMonth = months.find((m) => m.id === bill.month)
+                        const nameMonth = currentMonth ? currentMonth.name : ""
+
+
+                        return (
+                            <tr key={bill.id}>
+                                <td>
+                                    <input type="text" className="form-control" value={nameMonth}></input>
+                                </td>
+                                <td>
+                                    <input type="date" className="form-control" value={bill.period_start || ""} onChange={
+                                        (event) => handleFieldChange(
+                                            bill.id,
+                                            "period_start",
+                                            event.target.value
+                                        )}></input>
+                                </td>
+                                <td>
+                                    <input type="date" className="form-control" value={bill.period_end || ""} onChange={
+                                        (event) => handleFieldChange(
+                                            bill.id,
+                                            "period_end",
+                                            event.target.value
+                                        )
+                                    }></input>
+                                </td>
+                                <td>
+                                    <input type="number" className="form-control" value={bill.supply_number || ""} onChange={
+                                        (event) => handleFieldChange(
+                                            bill.id,
+                                            "supply_number",
+                                            event.target.value
+                                        )
+                                    }></input>
+                                </td>
+                                <td>
+                                    <input type="number" className="form-control" value={bill.supply_number_2 || ""} onChange={
+                                        (event) => handleFieldChange(
+                                            bill.id,
+                                            "supply_number_2",
+                                            event.target.value
+                                        )
+                                    }></input>
+                                </td>
+                                <td>{Number(bill.supply_number) + Number(bill.supply_number_2)}</td>
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </table>
             <button type="button" className="btn btn-primary w-50" onClick={saveBills}>Guardar Cambios</button>

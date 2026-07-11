@@ -269,30 +269,66 @@ def get_last_six_water_bills():
 
 @api.route("/electricity-usage", methods=["POST"])
 def create_electricity_bill():
-    print(">>> Entró al endpoint de electricidad")
     body = request.get_json()
 
-    new_bill = ElectricityBills(
-        year=2026,
-        month=1,
-        period_start=body["periodStart"],
-        period_end=body["periodEnd"],
-        supply_number=body["supplyNumber"],
-        supply_number_2=body["supplyNumber2"]
-    )
+    for bill_data in body:
+
+        if bill_data.get("supply_number") == "" or bill_data.get("supply_number") is None:
+            continue
+
+        p_start = bill_data["period_start"] if bill_data["period_start"] != "" else None
+        p_end = bill_data["period_end"] if bill_data["period_end"] != "" else None
+        s_num = bill_data["supply_number"] if bill_data["supply_number"] != "" else None
+        s_num2 = bill_data["supply_number_2"] if bill_data["supply_number_2"] != "" else None
+
+
+        existing_bill = ElectricityBills.query.filter_by(
+            year = bill_data["year"],
+            month = bill_data["month"]
+        ).first()
+
+        if existing_bill:
+            existing_bill.period_start = p_start,
+            existing_bill.period_end = p_end,
+            existing_bill.supply_number = s_num,
+            existing_bill.supply_number_2 = s_num2,
+
+        else:
+            new_bill = ElectricityBills(
+                provider="Luz del Sur",
+                year=bill_data["year"],
+                month=bill_data["month"],
+                period_start=p_start,
+                period_end=p_end,
+                supply_number=s_num,
+                supply_number_2=s_num2,
+            )
+            db.session.add(new_bill)
 
     try:
-        db.session.add(new_bill)
         db.session.commit()
 
         return jsonify({
             "msg": "Guardado correctamente",
-            "bill": new_bill.serialize()
         }), 201
 
     except Exception as e:
         db.session.rollback()
+        import traceback
+        traceback.print_exc()
         return jsonify({"msg": str(e)}), 500
+    
+
+@api.route("/electricity-usage", methods=["GET"])
+def get_electricity_bill():
+    bills = ElectricityBills.query.filter_by(year = 2026).all()
+    if not bills:
+        return jsonify([]), 200
+    
+    return jsonify([bill.serialize()
+                   for bill in bills]), 200
+
+
 @api.route("/reports/get-water-bill", methods=["GET"])
 def get_water_bill():
     supply_number = request.args.get("supply_number")
@@ -316,12 +352,13 @@ def get_water_bill():
         "water_usage_cost_building": float(water_bill.water_usage_total_cost),
     }), 200
 
+
 @api.route("/dashboard/income/summary", methods=["GET"])
 def get_income_month():
     today = date.today()
 
     total_income = db.session.query(func.coalesce(func.sum(Income.amount_paid), 0)
-    ).filter(
+                                    ).filter(
         extract("year", Income.payment_date) == today.year,
         extract("month", Income.payment_date) == today.month
     ).scalar()
