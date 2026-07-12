@@ -7,26 +7,26 @@ export const Sidebar = ({ isOpen }) => {
     const navigate = useNavigate();
     const [reportsOpen, setReportsOpen] = useState(false)
 
-    const goToDashoard = () => {
-        navigate('/dashboard')
+    const goToDashboard = () => {
+        navigate('dashboard')
     }
     const goToPayments = () => {
-        navigate('/payments')
+        navigate('payments')
     }
     const goToWaterReport = () => {
-        navigate('/water-usage')
+        navigate('water-usage')
     }
     const goToElectricityReport = () => {
-        navigate('/electricity-usage')
+        navigate('electricity-usage')
     }
     const goToBudgetReport = () => {
-        navigate('/budget')
+        navigate('budget')
     }
     const goToMaintenance = () => {
-        navigate('/maintenance')
+        navigate('maintenance')
     }
     const goToSettings = () => {
-        navigate('/settings')
+        navigate('settings')
     }
 
     const toggleReports = () => {
@@ -37,7 +37,7 @@ export const Sidebar = ({ isOpen }) => {
         <div className={isOpen ? "sidebar-visible bg-primary text-light p-2 Sidebar-container p-3" : "sidebar-hidden"}>
             <div className="d-flex row justify-content-start">
                 <h2>Menú Principal</h2>
-                <button type="button" className="btn btn-primary" onClick={goToDashoard}>Dashboard</button>
+                <button type="button" className="btn btn-primary" onClick={goToDashboard}>Dashboard</button>
                 <button type="button" className="btn btn-primary" onClick={goToPayments}>Pagos</button>
                 <button type="button" className="btn btn-primary" onClick={toggleReports}>Reportes
                     <i className={`fa-solid ${reportsOpen ? "fa-chevron-up" : "fa-chevron-down"}`}></i>

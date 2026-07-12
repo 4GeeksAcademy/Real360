@@ -9,13 +9,19 @@ body {
   background-color: whitesmoke;
 }
 
-.layout {
+/*.layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
+}*/
 
 .right-container {
   min-height: 100vh;
   background-color: white;
+}
+
+.layout-public {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

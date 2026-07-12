@@ -14,7 +14,7 @@ export const EditProfile = () => {
 
 
     const returnToDashboard = () => {
-        navigate('/dashboard');
+        navigate('/portal/dashboard');
     };
 
     const handdleFileCange = (event) => {

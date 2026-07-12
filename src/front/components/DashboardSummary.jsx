@@ -174,7 +174,7 @@ export const DashboardSummary = () => {
                         <div className="card-footer">
                             {/*<small className="text-muted">Last updated 3 mins ago</small>*/}
                             <p className="card-text text-muted">
-                                Gastos del mesclear
+                                Gastos del mes
                             </p>
                         </div>
                     </div>

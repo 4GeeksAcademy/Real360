@@ -4,6 +4,16 @@ export const Payments = () => {
 
     const [selectedDebts, setSelectedDebts] = useState([]);
     const [unitDebts, setUnitDebts] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+
+    const [paymentForm, setPaymentForm] = useState({
+        operation_number: "",
+        payment_date: "",
+        description: "",
+        currency: "PEN",
+        amount: "",
+        voucher: null
+    });
 
     useEffect(() => {
         const getUnitDebts = async () => {
@@ -46,7 +56,34 @@ export const Payments = () => {
     };
 
     const handleVoucher = () => {
-        console.log("Deudas seleccionadas:", selectedDebts);
+        /*console.log("Deudas seleccionadas:", selectedDebts);*/
+        setShowModal(true);
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setPaymentForm({
+            ...paymentForm,
+            [name]: value
+        });
+    };
+
+    const handleFileChange = (e) => {
+        setPaymentForm({
+            ...paymentForm,
+            voucher: e.target.files[0]
+        });
+
+    };
+
+    const handleSubmitPayment = (e) => {
+        e.preventDefault();
+        const data = {
+            debts: selectedDebts,
+            ...paymentForm
+        };
+        console.log("Datos del pago:", data);
+        setShowModal(false);
     };
 
     const today = new Date().toLocaleDateString("es-PE");
@@ -108,6 +145,61 @@ export const Payments = () => {
                     }
                 </div>
             </div>
+            {
+                showModal &&
+                <div className="modal fade show d-block" tabIndex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">
+                                    Registrar pago
+                                </h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}  >
+                                </button>
+                            </div>
+                            <form onSubmit={handleSubmitPayment}>
+                                <div className="modal-body">
+                                    <div className="row mb-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label"> Fecha de pago </label>
+                                            <input type="date" className="form-control" name="payment_date" value={paymentForm.payment_date} onChange={handleChange} required />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label"> Número de operación </label>
+                                            <input type="text" className="form-control" name="operation_number" value={paymentForm.operation_number} onChange={handleChange} required />
+                                        </div>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label"> Descripción </label>
+                                        <textarea className="form-control" name="description" rows="1" value={paymentForm.description} onChange={handleChange} placeholder="Ingrese una descripción del pago" required  />
+                                    </div>
+                                    <div className="row mb-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label"> Moneda  </label>
+                                            <select className="form-select" name="currency" value={paymentForm.currency} onChange={handleChange} >
+                                                <option value="PEN"> Soles (S/) </option>
+                                                <option value="USD"> Dólares ($) </option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label"> Monto pagado </label>
+                                            <input type="number" step="0.01" className="form-control" name="amount" value={paymentForm.amount} onChange={handleChange} required />
+                                        </div>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label"> Voucher de pago </label>
+                                        <input type="file" className="form-control" accept="image/*,.pdf" onChange={handleFileChange} required />
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)} > Cancelar </button>
+                                    <button type="submit" className="btn btn-primary" >  Guardar pago </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     );
 };
