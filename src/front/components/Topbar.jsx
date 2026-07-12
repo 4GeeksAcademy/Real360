@@ -16,7 +16,7 @@ export const Topbar = ({ toggleSidebar }) => {
         console.log("Usuario:", store.user);
     }, [store.user]);
     const resetPassword = () => {
-        navigate('/resetPassword');
+        navigate('/portal/reset-password');
     };
 
     const logOut = () => {
@@ -32,7 +32,7 @@ export const Topbar = ({ toggleSidebar }) => {
     };
 
     const editProfile = () => {
-        navigate('/editProfile');
+        navigate('/portal/edit-profile');
     };
 
     console.log(store.user?.profile_image_url);

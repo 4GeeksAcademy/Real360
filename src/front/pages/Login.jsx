@@ -7,7 +7,7 @@ import loginFondo from "../assets/img/login-fondo-3.png";
 import "../css/Login.css"
 
 export const Login = () => {
-    const { store, dispatch } = useGlobalReducer();
+    const { dispatch } = useGlobalReducer();
     const navigate = useNavigate();
 
     const [user, setUser] = useState({
@@ -15,44 +15,57 @@ export const Login = () => {
         password: ""
     });
 
+    const [loading, setLoading] = useState(false);
+
     const login = async () => {
-        const fetchOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(user)
-        };
 
-        const backendUrl = import.meta.env.VITE_BACKEND_URL
+        setLoading(true);
 
-        const response = await fetch(backendUrl + "/api/login", fetchOptions);
-        const data = await response.json();
+        try {
 
-        if (!response.ok) {
-            alert(data.message || "Error al iniciar sesión");
-            return;
+            const fetchOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(user)
+            };
+
+            const backendUrl = import.meta.env.VITE_BACKEND_URL
+
+            const response = await fetch(backendUrl + "/api/login", fetchOptions);
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message || "Error al iniciar sesión");
+                return;
+            }
+
+            if (!data.access_token || !data.user) {
+                alert("Respuesta inválida del servidor");
+                return;
+            }
+
+            localStorage.setItem("token", data.access_token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            dispatch({
+                type: "set_user",
+                payload: data.user,
+            });
+
+            dispatch({
+                type: "set_token",
+                payload: data.access_token,
+            });
+
+            navigate("/portal/dashboard");
         }
+        finally {
 
-        if (!data.access_token || !data.user) {
-            alert("Respuesta inválida del servidor");
-            return;
+            setLoading(false);
+
         }
-
-        localStorage.setItem("token", data.access_token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        dispatch({
-            type: "set_user",
-            payload: data.user,
-        });
-
-        dispatch({
-            type: "set_token",
-            payload: data.access_token,
-        });
-
-        navigate("/dashboard");
 
     }
 
@@ -63,7 +76,7 @@ export const Login = () => {
                     <h2 className="mb-4 fw-bold">
                         Inicia Sesión
                     </h2>
-                    <form >
+                    <form onSubmit={(e) => { e.preventDefault(); login(); }}>
                         <div className="mb-3">
                             <label htmlFor="exampleInputEmail1" className="form-label">Correo Electrónico</label>
                             <input type="email" className="form-control" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
@@ -73,14 +86,14 @@ export const Login = () => {
                             <input type="password" className="form-control" value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} />
                         </div>
                         <div className="d-flex justify-content-between align-items-center mt-3 mb-4 small-links">
-                            <Link to="/forgot-password" className="forgot-password-link">
+                            <Link to="/reset-password" className="forgot-password-link">
                                 ¿Olvidaste tu contraseña?
                             </Link>
                             <Link to="/signup" className="forgot-password-link">
                                 Regístrate
                             </Link>
                         </div>
-                        <button type="submit" className="btn btn-primary" onClick={(e) => { e.preventDefault(); login(); }}> Inicia Sesión</button>
+                        <button type="submit" className="btn btn-primary" disabled={loading}> {loading ? "Ingresando..." : "Inicia Sesión"}</button>
                     </form>
                 </div>
             </div>
