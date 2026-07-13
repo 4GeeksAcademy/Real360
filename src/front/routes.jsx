@@ -12,7 +12,6 @@ import { Home } from "./pages/Home";
 import { About } from "./pages/About";
 import { Services } from "./pages/Services";
 import { Contact } from "./pages/Contact";
-import { Blog } from "./pages/Blog";
 import { Login } from "./pages/Login";
 import { SignUp } from "./pages/SignUp";
 
@@ -36,7 +35,6 @@ export const router = createBrowserRouter(
         <Route path="about" element={<About />} />
         <Route path="services" element={<Services />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="blog" element={<Blog />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="*" element={<h1>Not found!</h1>} />
