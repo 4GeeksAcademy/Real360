@@ -48,7 +48,7 @@ export const SignUp = () => {
         });
 
         if (response.ok) {
-            navigate("/dashboard");
+            navigate("/portal/dashboard");
         }
     }
 

@@ -10,7 +10,7 @@ export const ResetPassword = () => {
     const [confirmNewPassword, setConfirmNewPassword] = useState("")
     
     const returnToDashboard = () => {
-            navigate('/dashboard'); 
+            navigate('/portal/dashboard'); 
     };
 
     return (
