@@ -30,9 +30,6 @@ export const Navbar = () => {
 						<li className="nav-item">
 							<NavLink to="/contact" className={getNavClass}>Contáctanos</NavLink>
 						</li>
-						<li className="nav-item">
-							<NavLink to="/blog" className={getNavClass}>Blog</NavLink>
-						</li>
 					</ul>
 					<NavLink to="/login" className="btn btn-login">
 						<i className="fa-brands fa-expeditedssl"></i>
