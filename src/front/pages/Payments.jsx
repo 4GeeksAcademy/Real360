@@ -4,6 +4,7 @@ export const Payments = () => {
 
     const [selectedDebts, setSelectedDebts] = useState([]);
     const [unitDebts, setUnitDebts] = useState([]);
+    const [saving, setSaving] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
     const [paymentForm, setPaymentForm] = useState({
@@ -15,26 +16,24 @@ export const Payments = () => {
         voucher: null
     });
 
-    useEffect(() => {
-        const getUnitDebts = async () => {
-            try {
-                const url = `${import.meta.env.VITE_BACKEND_URL}/api/unit-debts`;
-                const response = await fetch(url);
-                const text = await response.text();
-                const data = JSON.parse(text);
+    const getUnitDebts = async () => {
+        try {
+            const url = `${import.meta.env.VITE_BACKEND_URL}/api/unit-debts`;
+            const response = await fetch(url);
+            const text = await response.text();
+            const data = JSON.parse(text);
 
-                console.log(data);
-
-                if (!response.ok) {
-                    throw new Error(data.msg || "No se pudieron cargar los datos");
-                }
-
-                setUnitDebts(data);
-            } catch (error) {
-                console.error("Error cargando los datos:", error);
+            if (!response.ok) {
+                throw new Error(data.msg || "No se pudieron cargar los datos");
             }
-        };
 
+            setUnitDebts(data);
+        } catch (error) {
+            console.error("Error cargando los datos:", error);
+        }
+    };
+
+    useEffect(() => {
         getUnitDebts();
 
     }, []);
@@ -76,14 +75,66 @@ export const Payments = () => {
 
     };
 
-    const handleSubmitPayment = (e) => {
+    const handleSubmitPayment = async (e) => {
+
         e.preventDefault();
+
+        if (saving) return;
+
+        setSaving(true);
+
         const data = {
             debts: selectedDebts,
             ...paymentForm
         };
-        console.log("Datos del pago:", data);
-        setShowModal(false);
+
+        try {
+
+            const url = `${import.meta.env.VITE_BACKEND_URL}/api/payments`;
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.msg || "Ocurrió un error.");
+            }
+
+            alert(result.msg);
+
+            setShowModal(false);
+
+            setSelectedDebts([]);
+
+            setPaymentForm({
+                operation_number: "",
+                payment_date: "",
+                description: "",
+                currency: "PEN",
+                amount: "",
+                voucher: null
+            });
+
+            await getUnitDebts();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(error.message);
+
+        } finally {
+
+            setSaving(false);
+
+        }
+
     };
 
     const today = new Date().toLocaleDateString("es-PE");
@@ -171,7 +222,7 @@ export const Payments = () => {
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label"> Descripción </label>
-                                        <textarea className="form-control" name="description" rows="1" value={paymentForm.description} onChange={handleChange} placeholder="Ingrese una descripción del pago" required  />
+                                        <textarea className="form-control" name="description" rows="1" value={paymentForm.description} onChange={handleChange} placeholder="Ingrese una descripción del pago" required />
                                     </div>
                                     <div className="row mb-3">
                                         <div className="col-md-6">
@@ -193,7 +244,7 @@ export const Payments = () => {
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)} > Cancelar </button>
-                                    <button type="submit" className="btn btn-primary" >  Guardar pago </button>
+                                    <button type="submit" className="btn btn-primary" disabled={saving} >  {saving ? "Guardando..." : "Guardar pago"} </button>
                                 </div>
                             </form>
                         </div>

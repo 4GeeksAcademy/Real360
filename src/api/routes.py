@@ -2,13 +2,14 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income, UnitDebt, Budget, Expenses, ElectricityBill, UnitDebt
+from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income, UnitDebt, Budget, Expenses, UnitDebt, Unit
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from datetime import date
+from datetime import datetime
 from sqlalchemy import func, extract
 import smtplib
 import ssl
@@ -197,7 +198,7 @@ def send_email(subject, body, current_user_email):
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL(SMTP_SERVER, PORT, context=context) as server:
         server.login(SENDER_EMAIL, PASSWORD)
-        server.send_message(msg) 
+        server.send_message(msg)
 
 
 @api.route("/change-password", methods=["POST"])
@@ -211,16 +212,17 @@ def update_password():
 
     user = User.query.filter_by(email=current_user_email).first()
 
-    if(current_password != user.password):
-        return jsonify({"msg":"La contraseña actual es incorrecta"}), 401
+    if (current_password != user.password):
+        return jsonify({"msg": "La contraseña actual es incorrecta"}), 401
 
     user.password = new_password
 
     db.session.commit()
 
-    send_email("Contraseña Real 360 Actualizada", "Tu contraseña se ha actualizado con éxito 🎉", current_user_email)
+    send_email("Contraseña Real 360 Actualizada",
+               "Tu contraseña se ha actualizado con éxito 🎉", current_user_email)
 
-    return jsonify({"msg":"Contraseña actualizada con éxito"}), 200
+    return jsonify({"msg": "Contraseña actualizada con éxito"}), 200
 
 
 @api.route("/water-bills", methods=["POST"])
@@ -368,10 +370,9 @@ def create_electricity_bill():
         s_num = bill_data["supply_number"] if bill_data["supply_number"] != "" else None
         s_num2 = bill_data["supply_number_2"] if bill_data["supply_number_2"] != "" else None
 
-
         existing_bill = ElectricityBills.query.filter_by(
-            year = bill_data["year"],
-            month = bill_data["month"]
+            year=bill_data["year"],
+            month=bill_data["month"]
         ).first()
 
         if existing_bill:
@@ -404,14 +405,14 @@ def create_electricity_bill():
         import traceback
         traceback.print_exc()
         return jsonify({"msg": str(e)}), 500
-    
+
 
 @api.route("/electricity-usage", methods=["GET"])
 def get_electricity_bill():
-    bills = ElectricityBills.query.filter_by(year = 2026).all()
+    bills = ElectricityBills.query.filter_by(year=2026).all()
     if not bills:
         return jsonify([]), 200
-    
+
     return jsonify([bill.serialize()
                    for bill in bills]), 200
 
@@ -567,28 +568,40 @@ def get_last_six_water_bills():
 @api.route("/electricity-bills/last-six-months", methods=["GET"])
 def get_last_six_electricity_bills():
 
-    electricity_bill = (
-        ElectricityBill.query
+    electricity_bills = (
+        ElectricityBills.query
         .order_by(
-            ElectricityBill.year.desc(),
-            ElectricityBill.month.desc()
+            ElectricityBills.year.desc(),
+            ElectricityBills.month.desc()
         )
         .limit(6)
         .all()
     )
 
-    electricity_bill.reverse()
+    electricity_bills.reverse()
 
-    return jsonify([
-        bill.serialize()
-        for bill in electricity_bill
-    ])
+    month_names = ["Ene", "Feb", "Mar", "Abr", "May",
+                   "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+
+    result = [
+        {
+            "month_name": f"{month_names[bill.month - 1]} {bill.year}",
+            "electricity_usage_total_cost": (
+                float(bill.supply_number) + float(bill.supply_number_2)
+            )
+        }
+        for bill in electricity_bills
+    ]
+
+    return jsonify(result), 200
+
 
 @api.route("/unit-debts", methods=["GET"])
 def get_unit_debts():
 
     unit_debts = (
         UnitDebt.query
+        .filter_by(payment_status="pending")
         .order_by(
             UnitDebt.building,
             UnitDebt.unit_number,

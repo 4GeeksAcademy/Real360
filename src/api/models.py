@@ -265,6 +265,7 @@ class ElectricityBills (db.Model):
             "month": self.month,
             "period_start": self.period_start.isoformat() if self.period_start else None,
             "period_end": self.period_end.isoformat() if self.period_end else None,
+            "electricity_usage_total_cost": float(self.supply_number) + float(self.supply_number_2)
         }
 
 
@@ -300,29 +301,28 @@ class MaintenanceFees (db.Model):
         Numeric(10, 2), nullable=True)
     total_cost: Mapped[float] = mapped_column(Numeric(10, 2), nullable=True)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "report_number": self.report_number,
+            "building": self.building,
+            "year": self.year,
+            "month": self.month,
 
-def serialize(self):
-    return {
-        "id": self.id,
-        "report_number": self.report_number,
-        "building": self.building,
-        "year": self.year,
-        "month": self.month,
+            "unit_number": self.unit_number,
+            "water_usage_total_cost": float(self.water_usage_total_cost),
+            "electricity_usage_common_cost": float(self.electricity_usage_common_cost),
 
-        "unit_number": self.unit_number,
-        "water_usage_total_cost": float(self.water_usage_total_cost),
-        "electricity_usage_common_cost": float(self.electricity_usage_common_cost),
+            "administration_amount": float(self.administration_amount),
+            "security_staff_amount": float(self.security_staff_amount),
+            "cleaning_staff_amount": float(self.cleaning_staff_amount),
+            "elevator_maintenance_amount": float(self.elevator_maintenance_amount),
+            "miscellaneous_expenses_amount": float(self.miscellaneous_expenses_amount),
+            "preventive_maintenance_amount": float(self.preventive_maintenance_amount),
 
-        "administration_amount": float(self.administration_amount),
-        "security_staff_amount": float(self.security_staff_amount),
-        "cleaning_staff_amount": float(self.cleaning_staff_amount),
-        "elevator_maintenance_amount": float(self.elevator_maintenance_amount),
-        "miscellaneous_expenses_amount": float(self.miscellaneous_expenses_amount),
-        "preventive_maintenance_amount": float(self.preventive_maintenance_amount),
-
-        "penalty_amount": float(self.penalty_amount),
-        "total_cost": float(self.total_cost)
-    }
+            "penalty_amount": float(self.penalty_amount),
+            "total_cost": float(self.total_cost)
+        }
 
 
 class UnitDebt (db.Model):

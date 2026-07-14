@@ -37,6 +37,8 @@ export const Dashboard = () => {
 				const response = await fetch(url);
 				const text = await response.text();
 				const data = JSON.parse(text);
+				
+				console.log("Electricity data:", data);
 
 				if (!response.ok) {
 					throw new Error(data.msg || "No se pudieron cargar los recibos de electricidad");
@@ -59,7 +61,7 @@ export const Dashboard = () => {
 	}));
 
 	const electricityChartData = electricityBills.map((bill) => ({
-		month: bill.month,
+		month: bill.month_name,
 		usage: Number(bill.electricity_usage_total_cost) || 0
 	}));
 
