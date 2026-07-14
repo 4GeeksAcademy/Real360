@@ -49,8 +49,8 @@ export const Sidebar = ({ isOpen }) => {
                         <button type="button" className="btn btn-info m-2" onClick={goToBudgetReport}>Presupuesto</button>
                     </div>
                 )}
-                <button type="button" className="btn btn-primary" onClick={goToMaintenance}>Mantenimiento</button>
-                <button type="button" className="btn btn-primary" onClick={goToSettings}>Configuración</button>
+                {/*<button type="button" className="btn btn-primary" onClick={goToMaintenance}>Mantenimiento</button>*/}
+                {/*<button type="button" className="btn btn-primary" onClick={goToSettings}>Configuración</button>*/}
             </div>
     </div>
     );

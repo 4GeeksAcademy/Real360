@@ -10,6 +10,15 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from datetime import date
 from sqlalchemy import func, extract
+import smtplib
+import ssl
+from email.message import EmailMessage
+
+SMTP_SERVER = "smtp.gmail.com".replace('\xa0', '')
+PORT = 465
+SENDER_EMAIL = "marioramirez.lopez98@gmail.com".replace('\xa0', '')
+PASSWORD = "jnrc reoe aofl fcqp".replace('\xa0', '')
+RECEIVER_EMAIL = "mario.ramirez@utp.edu.co".replace('\xa0', '')
 
 api = Blueprint('api', __name__)
 
@@ -106,6 +115,65 @@ def update_user():
     except:
         db.session.rollback()
         return jsonify({"msg": "Error al actualizar"})
+
+
+def send_email(subject, body, current_user_email):
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = SENDER_EMAIL
+    msg["To"] = current_user_email
+
+    msg.set_content(body)
+
+    html = f"""
+    <html>
+        <body style = "background-color: #f4f6f9; font-family: Arial, sans-serif;">
+            <table align = "center" style = "background-color: #ffffff; border-radius: 8px; padding: 30px; margin: 20px auto">
+                <tr>
+                    <td align="center" style="padding-bottom: 20px;">
+                        <img src="https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSWzjqwm3npjKGoG0pFosBGO0ZXfvwBM44z91ZDwKB7Axi1WGLduscwONt8d3Bs5GyL9SDx9Ck6SwAjFNM" alt="Seguridad" width="80" style="display: block; border: 0;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h1 style = "text-align: center;">{subject.replace('\xa0', '')}</h1>
+                        <p>{body.replace('\xa0', '')}</p>
+                    </td>
+                </tr>
+            </table>
+        </body>
+    </html>
+    """
+
+    msg.add_alternative(html.replace('\xa0', ''), subtype="html")
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(SMTP_SERVER, PORT, context=context) as server:
+        server.login(SENDER_EMAIL, PASSWORD)
+        server.send_message(msg) 
+
+
+@api.route("/change-password", methods=["POST"])
+@jwt_required()
+def update_password():
+
+    current_password = request.json.get("current_password")
+    new_password = request.json.get("new_password")
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if(current_password != user.password):
+        return jsonify({"msg":"La contraseña actual es incorrecta"}), 401
+
+    user.password = new_password
+
+    db.session.commit()
+
+    send_email("Contraseña Real 360 Actualizada", "Tu contraseña se ha actualizado con éxito 🎉", current_user_email)
+
+    return jsonify({"msg":"Contraseña actualizada con éxito"}), 200
 
 
 @api.route("/water-bills", methods=["POST"])
