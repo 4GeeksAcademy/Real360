@@ -2,13 +2,14 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income, UnitDebt, Budget, Expenses, ElectricityBill, UnitDebt
+from api.models import db, User, WaterBill, WaterUsageUnit, ElectricityBills, Income, UnitDebt, Budget, Expenses, UnitDebt, Unit
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from datetime import date
+from datetime import datetime
 from sqlalchemy import func, extract
 import smtplib
 import ssl
@@ -553,6 +554,7 @@ def get_unit_debts():
 
     unit_debts = (
         UnitDebt.query
+        .filter_by(payment_status="pending")
         .order_by(
             UnitDebt.building,
             UnitDebt.unit_number,
@@ -562,3 +564,57 @@ def get_unit_debts():
         .all()
     )
     return jsonify([debt.serialize() for debt in unit_debts]), 200
+
+
+@api.route("/payments", methods=["POST"])
+def register_payment():
+
+    body = request.get_json()
+
+    debts = body["debts"]
+
+    for debt_id in debts:
+
+        debt = UnitDebt.query.get(debt_id)
+
+        if debt is None:
+            return jsonify({
+                "msg": "La deuda no existe."
+            }), 404
+
+        if debt.payment_status == "paid":
+            return jsonify({
+                "msg": "La deuda ya fue pagada."
+            }), 400
+
+        unit = Unit.query.filter_by(
+            building=debt.building,
+            unit_number=debt.unit_number
+        ).first()
+
+        if unit is None:
+            return jsonify({
+                "msg": "La unidad no existe."
+            }), 404
+
+        income = Income(
+            payment_date=datetime.strptime(
+                body["payment_date"], "%Y-%m-%d").date(),
+            description=body["description"],
+            currency=body["currency"],
+            amount_paid=float(debt.pending_amount),
+            operation_number=body["operation_number"],
+            id_unit=unit.id
+        )
+
+        db.session.add(income)
+
+        debt.paid_amount = debt.fee_amount
+        debt.payment_status = "paid"
+        debt.paid_at = datetime.now()
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Pago registrado correctamente."
+    }), 200
