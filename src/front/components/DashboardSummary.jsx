@@ -124,7 +124,6 @@ export const DashboardSummary = () => {
             <div className="row">
                 <div className="col-3">
                     <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
                         <div className="card-body">
                             <h5 className="card-title">
                                 Presupuesto
@@ -145,7 +144,6 @@ export const DashboardSummary = () => {
                 </div>
                 <div className="col-3">
                     <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
                         <div className="card-body">
                             <h5 className="card-title">Ingresos</h5>
                             <h3 className="text-success mt-3">
@@ -162,7 +160,6 @@ export const DashboardSummary = () => {
                 </div>
                 <div className="col-3">
                     <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
                         <div className="card-body">
                             <h5 className="card-title">
                                 Egresos
@@ -181,7 +178,6 @@ export const DashboardSummary = () => {
                 </div>
                 <div className="col-3">
                     <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
                         <div className="card-body">
                             <h5 className="card-title">
                                 Deuda

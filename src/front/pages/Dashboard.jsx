@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AreaChartCard } from "../components/AreaChartCard";
 import { DashboardSummary } from "../components/DashboardSummary.jsx";
+import "../css/Dashboard.css"
 
 export const Dashboard = () => {
 	const [waterBills, setWaterBills] = useState([]);
@@ -65,37 +66,36 @@ export const Dashboard = () => {
 	return (
 		<>
 			<div className="container dashboard">
-				<div className="row">
-					<div className="col-12">
-						<DashboardSummary />
-					</div>
+				<div className="dashboard-summary">
+					<DashboardSummary />
 				</div>
+				<div className="dashboard-chart">
+					<div className="row mt-4">
+						<div className="col-12 col-lg-6">
+							<AreaChartCard
+								title="Consumo de agua (S/)"
+								data={waterChartData}
+								xDataKey="month"
+								yDataKey="usage"
+								tooltipLabel="Gasto de agua"
+								tooltipPrefix="S/ "
+								color="#2f80ed"
+								gradientId="waterGradient"
+							/>
+						</div>
 
-				<div className="row mt-4">
-					<div className="col-12 col-lg-6">
-						<AreaChartCard
-							title="Consumo de agua (S/)"
-							data={waterChartData}
-							xDataKey="month"
-							yDataKey="usage"
-							tooltipLabel="Gasto de agua"
-							tooltipPrefix="S/ "
-							color="#2f80ed"
-							gradientId="waterGradient"
-						/>
-					</div>
-
-					<div className="col-12 col-lg-6">
-						<AreaChartCard
-							title="Consumo de electricidad (S/)"
-							data={electricityChartData}
-							xDataKey="month"
-							yDataKey="usage"
-							tooltipLabel="Gasto de electricidad"
-							tooltipPrefix="S/ "
-							color="#f2c94c"
-							gradientId="electricityGradient"
-						/>
+						<div className="col-12 col-lg-6">
+							<AreaChartCard
+								title="Consumo de electricidad (S/)"
+								data={electricityChartData}
+								xDataKey="month"
+								yDataKey="usage"
+								tooltipLabel="Gasto de electricidad"
+								tooltipPrefix="S/ "
+								color="#f2c94c"
+								gradientId="electricityGradient"
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
