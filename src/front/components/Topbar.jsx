@@ -46,7 +46,7 @@ export const Topbar = ({ toggleSidebar }) => {
             <div className="d-flex align-items-center">
             </div>
             <div className="d-flex align-items-center">
-                <i className="fa-solid fa-bell"></i>
+                {/*<i className="fa-solid fa-bell"></i>*/}
                 <div className="dropdown d-flex justify-content-end align-items-center">
                     <a className="btn dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {store.user?.profile_image_url ? (

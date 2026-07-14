@@ -2,8 +2,19 @@ import React, { useEffect } from "react"
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Jumbotron } from "../components/Jumbotron.jsx";
 import { Features } from "../components/Features.jsx";
+import { useState } from "react";
 
 export const Contact = () => {
+
+    const [fullName, setFullName] = useState()
+    const [email, setEmail] = useState()
+    const [subject, setSubject] = useState()
+    const [message, setMessage] = useState()
+
+
+    const storeData = () => {
+
+    }
 
     return (
         <div className="container py-5">
