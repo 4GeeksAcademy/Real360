@@ -78,6 +78,7 @@ def signup():
 
     return jsonify({"msg": "Created succesfully", "user": new_user.serialize()}), 201
 
+
 def send_public_email(subject, body, user_email):
     msg = EmailMessage()
     msg["Subject"] = subject
@@ -111,8 +112,8 @@ def send_public_email(subject, body, user_email):
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL(SMTP_SERVER, PORT, context=context) as server:
         server.login(SENDER_EMAIL, PASSWORD)
-        server.send_message(msg) 
-    
+        server.send_message(msg)
+
 
 @api.route("/contact", methods=["POST"])
 def send_contact_email():
@@ -121,9 +122,10 @@ def send_contact_email():
     subject = request.json.get("subject")
     message = request.json.get("message")
 
-    send_public_email("¡Te damos la bienvenida a Real360! 🏢 " + full_name, "La plataforma inteligente diseñada para centralizar y simplificar por completo la administración de tu edificio. Desde aquí tienes una visión integral en 360° de todo lo que ocurre en tu comunidad, facilitando la gestión operativa, el mantenimiento y la comunicación en un solo lugar.",email)
+    send_public_email("¡Te damos la bienvenida a Real360! 🏢 " + full_name,
+                      "La plataforma inteligente diseñada para centralizar y simplificar por completo la administración de tu edificio. Desde aquí tienes una visión integral en 360° de todo lo que ocurre en tu comunidad, facilitando la gestión operativa, el mantenimiento y la comunicación en un solo lugar.", email)
 
-    return jsonify({"msg":"Sended succesfully"}), 200
+    return jsonify({"msg": "Sended succesfully"}), 200
 
 
 @api.route("/profile", methods=["GET"])
@@ -612,3 +614,45 @@ def get_unit_debts():
     )
     return jsonify([debt.serialize() for debt in unit_debts]), 200
 
+
+@api.route("/payments", methods=["POST"])
+def create_payment():
+
+    body = request.get_json()
+
+    debt = UnitDebt.query.get(body["debts"][0])
+
+    unit = Unit.query.filter_by(
+        building=debt.building,
+        unit_number=debt.unit_number
+    ).first()
+
+    payment = Income(
+        payment_date=datetime.strptime(
+            body["payment_date"], "%Y-%m-%d"
+        ).date(),
+        description=body["description"],
+        currency=body["currency"],
+        amount_paid=float(body["amount"]),
+        operation_number=body["operation_number"],
+        id_unit=unit.id
+    )
+
+    db.session.add(payment)
+
+    for debt_id in body["debts"]:
+        unit_debt = UnitDebt.query.get(debt_id)
+
+        unit_debt.paid_amount = unit_debt.fee_amount
+        unit_debt.payment_status = "paid"
+        unit_debt.paid_at = datetime.strptime(
+            body["payment_date"],
+            "%Y-%m-%d"
+        )
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Pago registrado correctamente.",
+        "payment": payment.serialize()
+    }), 201
