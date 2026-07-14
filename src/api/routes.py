@@ -122,8 +122,7 @@ def send_contact_email():
     subject = request.json.get("subject")
     message = request.json.get("message")
 
-    send_public_email("¡Te damos la bienvenida a Real360! 🏢 " + full_name,
-                      "La plataforma inteligente diseñada para centralizar y simplificar por completo la administración de tu edificio. Desde aquí tienes una visión integral en 360° de todo lo que ocurre en tu comunidad, facilitando la gestión operativa, el mantenimiento y la comunicación en un solo lugar.", email)
+    send_public_email("¡Recibimos tu mensaje! 🏢 ",f"Hola {full_name},\n\nHemos recibido tu solicitud correctamente. Nuestro equipo ya está revisando tu mensaje y nos pondremos en contacto contigo lo antes posible para ayudarte con lo que necesites.\n\n¡Gracias por escribirnos!", email)
 
     return jsonify({"msg": "Sended succesfully"}), 200
 

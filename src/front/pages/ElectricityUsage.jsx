@@ -7,7 +7,7 @@ export const ElectricityUsage = () => {
     const saveBills = async () => {
         console.log(electricityBills)
 
-        const response = await fetch('https://scaling-funicular-g49wp9x6qw57c9p5q-3001.app.github.dev/api/electricity-usage', {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/electricity-usage`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -77,7 +77,7 @@ export const ElectricityUsage = () => {
     ]
 
     const getData = () => {
-        fetch('https://scaling-funicular-g49wp9x6qw57c9p5q-3001.app.github.dev/api/electricity-usage')
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/electricity-usage`)
 
             .then(response => {
                 if (!response.ok) {

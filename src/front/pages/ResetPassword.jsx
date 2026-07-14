@@ -35,7 +35,7 @@ export const ResetPassword = () => {
         const tokenGuardado = localStorage.getItem("token");
 
         try {
-            const response = await fetch("https://super-space-xylophone-v667pxg9gj7vhx476-3001.app.github.dev//api/change-password", {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}//api/change-password`, {
                 method: "POST",
                 body: JSON.stringify({
                     "current_password": password,
