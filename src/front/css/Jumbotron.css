@@ -3,7 +3,9 @@
 .jumbotron {
   display: flex;
   height: 40vh;
-  background-color: #c2d0e9;
+  /*background-color: #c2d0e9;*/
+  /*background-color: #e7f1ff;*/
+  background-color: #E3EDFD;
   margin: 0;
   padding: 0;
 }
@@ -45,4 +47,17 @@
 .jumbotron-image img {
   height: 100%;
   object-fit: contain;
+}
+
+.jumbotron-title {
+    margin-top: 1rem;
+}
+
+.jumbotron-subtitle {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #6c757d;
+  font-weight: 600;
+  margin-bottom: 10px;
 }

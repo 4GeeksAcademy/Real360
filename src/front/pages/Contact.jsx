@@ -1,7 +1,5 @@
 import React, { useEffect } from "react"
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-import { Jumbotron } from "../components/Jumbotron.jsx";
-import { Features } from "../components/Features.jsx";
 
 export const Contact = () => {
 

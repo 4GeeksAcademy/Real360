@@ -1,20 +1,22 @@
 import { NavLink } from "react-router-dom";
 import "../css/Jumbotron.css";
-import imagen1 from "../assets/img/sistema-real360.png";
 
-export const Jumbotron = () => {
+export const Jumbotron = ({ title, subtitle, description, image, buttonText, buttonLink }) => {
+
   return (
     <div className="container jumbotron">
       <div className="jumbotron-content">
-        <h1 className="jumbotron-title"> Simplifica la gestión de tu edificio</h1>
-        <p className="jumbotron-subtitle">Gestiona tus pagos, reportes, comunicados, votaciones y reservas desde una sola plataforma digital diseñada para administradores y residentes.</p>
-        <NavLink to="/contact" className="btn btn-primary btn-lg">
-          Solicita tu demo
+        {/*<span className="jumbotron-subtitle"> {subtitle}</span>*/}
+        <h2 className="jumbotron-title"> {title}</h2>
+        <div className="hero-blueline"></div>
+        <p className="jumbotron-description">{description}</p>
+        <NavLink to={buttonLink} className="btn btn-primary">
+          {buttonText}
         </NavLink>
       </div>
       <div className="jumbotron-image">
-        <img src={imagen1} alt="Gestión edificios" />
+        <img src={image} alt={title} />
       </div>
     </div>
-  );
-};
+  )
+}
