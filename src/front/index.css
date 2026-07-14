@@ -1,17 +1,6 @@
 body {
   margin: 0;
-  padding: 0;
   background-color: whitesmoke;
-}
-
-body {
-  margin: 0;
-  background-color: whitesmoke;
-}
-
-.right-container {
-  min-height: 100vh;
-  background-color: white;
 }
 
 .layout-public {
@@ -19,3 +8,9 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.right-container {
+  min-height: 100vh;
+  background-color: white;
+}
+

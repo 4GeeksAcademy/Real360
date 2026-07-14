@@ -1,5 +1,5 @@
 import { useState } from "react"
-import useGloalReducer from "../hooks/useGlobalReducer";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 import { Link, useNavigate } from "react-router-dom";
 
 
@@ -7,7 +7,7 @@ import loginFondo from "../assets/img/login-fondo-3.png";
 import "../css/SignUp.css"
 
 export const SignUp = () => {
-    const { dispatch } = useGloalReducer();
+    const { dispatch } = useGlobalReducer();
     const navigate = useNavigate();
 
     const [user, setUser] = useState({

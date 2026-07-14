@@ -1,5 +1,4 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from "recharts";
-import "../css/AreaChartCard.css";
 
 export const AreaChartCard = ({title,periodText = "Últimos 6 meses",data = [],xDataKey = "month",yDataKey = "usage", tooltipLabel = "Gasto",tooltipPrefix = "S/ ", color = "#2f80ed",gradientId = "areaChartGradient"}) => {
     
