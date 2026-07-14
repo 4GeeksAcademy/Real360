@@ -265,6 +265,7 @@ class ElectricityBills (db.Model):
             "month": self.month,
             "period_start": self.period_start.isoformat() if self.period_start else None,
             "period_end": self.period_end.isoformat() if self.period_end else None,
+            "electricity_usage_total_cost": float(self.supply_number) + float(self.supply_number_2)
         }
 
 

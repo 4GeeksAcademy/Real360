@@ -516,25 +516,24 @@ def get_last_six_water_bills():
 
     return jsonify(result), 200
 
-
 @api.route("/electricity-bills/last-six-months", methods=["GET"])
 def get_last_six_electricity_bills():
 
-    electricity_bill = (
-        ElectricityBill.query
+    electricity_bills = (
+        ElectricityBills.query
         .order_by(
-            ElectricityBill.year.desc(),
-            ElectricityBill.month.desc()
+            ElectricityBills.year.desc(),
+            ElectricityBills.month.desc()
         )
         .limit(6)
         .all()
     )
 
-    electricity_bill.reverse()
+    electricity_bills.reverse()
 
     return jsonify([
         bill.serialize()
-        for bill in electricity_bill
+        for bill in electricity_bills
     ])
 
 @api.route("/unit-debts", methods=["GET"])
