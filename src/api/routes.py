@@ -78,6 +78,53 @@ def signup():
 
     return jsonify({"msg": "Created succesfully", "user": new_user.serialize()}), 201
 
+def send_public_email(subject, body, user_email):
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = SENDER_EMAIL
+    msg["To"] = user_email
+
+    msg.set_content(body)
+
+    html = f"""
+    <html>
+        <body style = "background-color: #f4f6f9; font-family: Arial, sans-serif;">
+            <table align = "center" style = "background-color: #ffffff; border-radius: 8px; padding: 30px; margin: 20px auto">
+                <tr>
+                    <td align="center" style="padding-bottom: 20px;">
+                        <img src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcS5Or62WY42AbAgYQROKv5MfWivbdtoH_Pt_3P5HrzblyvVcMmCBSllrvY2s5uck_M-N_NX87NAoK9hw20" alt="Bienvenida" width="80" style="display: block; border: 0;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h1 style = "text-align: center;">{subject.replace('\xa0', '')}</h1>
+                        <p>{body.replace('\xa0', '')}</p>
+                    </td>
+                </tr>
+            </table>
+        </body>
+    </html>
+    """
+
+    msg.add_alternative(html.replace('\xa0', ''), subtype="html")
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(SMTP_SERVER, PORT, context=context) as server:
+        server.login(SENDER_EMAIL, PASSWORD)
+        server.send_message(msg) 
+    
+
+@api.route("/contact", methods=["POST"])
+def send_contact_email():
+    full_name = request.json.get("fullName")
+    email = request.json.get("email")
+    subject = request.json.get("subject")
+    message = request.json.get("message")
+
+    send_public_email("¡Te damos la bienvenida a Real360! 🏢 " + full_name, "La plataforma inteligente diseñada para centralizar y simplificar por completo la administración de tu edificio. Desde aquí tienes una visión integral en 360° de todo lo que ocurre en tu comunidad, facilitando la gestión operativa, el mantenimiento y la comunicación en un solo lugar.",email)
+
+    return jsonify({"msg":"Sended succesfully"}), 200
+
 
 @api.route("/profile", methods=["GET"])
 @jwt_required()
@@ -565,56 +612,3 @@ def get_unit_debts():
     )
     return jsonify([debt.serialize() for debt in unit_debts]), 200
 
-
-@api.route("/payments", methods=["POST"])
-def register_payment():
-
-    body = request.get_json()
-
-    debts = body["debts"]
-
-    for debt_id in debts:
-
-        debt = UnitDebt.query.get(debt_id)
-
-        if debt is None:
-            return jsonify({
-                "msg": "La deuda no existe."
-            }), 404
-
-        if debt.payment_status == "paid":
-            return jsonify({
-                "msg": "La deuda ya fue pagada."
-            }), 400
-
-        unit = Unit.query.filter_by(
-            building=debt.building,
-            unit_number=debt.unit_number
-        ).first()
-
-        if unit is None:
-            return jsonify({
-                "msg": "La unidad no existe."
-            }), 404
-
-        income = Income(
-            payment_date=datetime.strptime(
-                body["payment_date"], "%Y-%m-%d").date(),
-            description=body["description"],
-            currency=body["currency"],
-            amount_paid=float(debt.pending_amount),
-            operation_number=body["operation_number"],
-            id_unit=unit.id
-        )
-
-        db.session.add(income)
-
-        debt.paid_amount = debt.fee_amount
-        debt.payment_status = "paid"
-        debt.paid_at = datetime.now()
-
-    db.session.commit()
-
-    return jsonify({
-        "msg": "Pago registrado correctamente."
-    }), 200

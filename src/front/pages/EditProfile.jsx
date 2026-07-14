@@ -74,12 +74,11 @@ export const EditProfile = () => {
         }
         console.log(store.token);
 
-        fetch('https://super-space-xylophone-v667pxg9gj7vhx476-3001.app.github.dev/api/editProfile', {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/editProfile`, {
             method: 'PUT',
             body: JSON.stringify({
                 "firstname": firstname,
                 "lastname": lastname,
-                "birth_date": dateTime,
                 "profile_image_url": profileImageUrl
             }),
             headers: {

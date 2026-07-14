@@ -1,7 +1,61 @@
 import React, { useEffect } from "react"
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import { useState } from "react";
 
 export const Contact = () => {
+
+    const [fullName, setFullName] = useState("")
+    const [email, setEmail] = useState("")
+    const [subject, setSubject] = useState("")
+    const [message, setMessage] = useState("")
+
+
+    const handleSend = async () => {
+        console.log(fullName)
+        console.log(email)
+        console.log(subject)
+        console.log(message)
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!fullName.trim() || !email.trim() || !subject.trim() || !message.trim()) {
+            alert("Por favor, completa todos los campos antes de enviar.");
+            return;
+        }
+
+        if (!emailRegex.test(email)) {
+            alert("Por favor, ingresa un correo electrónico válido.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/contact`, {
+                method: "POST",
+                body: JSON.stringify({
+                    fullName: fullName,
+                    email: email,
+                    subject: subject,
+                    message: message
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            alert("Mensaje enviado con éxito 🎉, te hemos enviado un correo de confirmación 📬")
+
+            setFullName("");
+            setEmail("");
+            setSubject("");
+            setMessage("");
+
+        }
+        catch (error) {
+            console.error("Error uploading data:", error)
+        }
+    }
 
     return (
         <div className="container py-5">
@@ -25,22 +79,22 @@ export const Contact = () => {
                                         en contacto contigo lo antes posible.
                                     </p>
                                     <div className="mb-3">
-                                        <label htmlFor="formGroupExampleInput" className="form-label">Nombre Completo:</label>
-                                        <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Nombre Completo" />
+                                        <label htmlFor="formGroupExampleInput" className="form-label" >Nombre Completo:</label>
+                                        <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Nombre Completo" value={fullName} onChange={(event) => setFullName(event.target.value)} />
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="formGroupExampleInput2" className="form-label">Correo Electrónico:</label>
-                                        <input type="text" className="form-control" id="formGroupExampleInput2" placeholder="Correo Electrónico" />
+                                        <input type="text" className="form-control" id="formGroupExampleInput2" placeholder="Correo Electrónico" value={email} onChange={(event) => setEmail(event.target.value)} />
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="formGroupExampleInput2" className="form-label">Asunto</label>
-                                        <input type="text" className="form-control" id="formGroupExampleInput2" placeholder="Asunto" />
+                                        <input type="text" className="form-control" id="formGroupExampleInput2" placeholder="Asunto" value={subject} onChange={(event) => setSubject(event.target.value)} />
                                     </div>
                                     <div className="form-floating mb-3">
-                                        <textarea className="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style={{ height: "180px" }}></textarea>
+                                        <textarea className="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style={{ height: "180px" }} value={message} onChange={(event) => setMessage(event.target.value)}></textarea>
                                         <label htmlFor="floatingTextarea2">Mensaje</label>
                                     </div>
-                                    <button type="button" className="btn btn-primary mt-3 px-5">Enviar</button>
+                                    <button type="button" className="btn btn-primary mt-3 px-5" onClick={handleSend}>Enviar</button>
 
 
                                 </div>
