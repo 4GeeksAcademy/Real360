@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 });
 
 // Create Document Component
-export const ConstanciaPDF = () => (
+const MyDocument = () => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>

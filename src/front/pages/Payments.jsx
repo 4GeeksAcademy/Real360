@@ -1,6 +1,6 @@
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useState, useEffect } from "react";
-import { ConstanciaPDF } from "../components/ConstanciaPDF";
+import { ConstanciaPDF } from "../components/ConstanciaPDF.jsx";
 
 export const Payments = () => {
 
@@ -8,7 +8,8 @@ export const Payments = () => {
     const [unitDebts, setUnitDebts] = useState([]);
     const [saving, setSaving] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [pdf, setPDF] = useState("");
+    const [showPDF, setShowPDF] = useState(false);
+    const [pdf, setPDF] = useState(null);
 
     const [paymentForm, setPaymentForm] = useState({
         operation_number: "",
@@ -109,7 +110,8 @@ export const Payments = () => {
             if (!response.ok) {
                 throw new Error(result.msg || "Ocurrió un error.");
             } else {
-                setPDF(data)
+                setPDF(data);
+                setShowPDF(true);
             }
 
             alert(result.msg);
@@ -202,6 +204,22 @@ export const Payments = () => {
                             <button className="btn btn-success" disabled >  💳 Pagar en línea  </button>
                         </div>
                     }
+                    {
+                        showPDF && pdf &&
+                        <div className="mt-3 text-center">
+                            <PDFDownloadLink
+                                document={<ConstanciaPDF datos={pdf} />}
+                                fileName={`Constancia-${pdf.operation_number}.pdf`}
+                                className="btn btn-outline-primary"
+                            >
+                                {({ loading }) =>
+                                    loading
+                                        ? "Generando constancia..."
+                                        : "📄 Descargar constancia de pago"
+                                }
+                            </PDFDownloadLink>
+                        </div>
+                    }
                 </div>
             </div>
             {
@@ -250,11 +268,6 @@ export const Payments = () => {
                                         <input type="file" className="form-control" accept="image/*,.pdf" onChange={handleFileChange} required />
                                     </div>
                                 </div>
-
-                                <PDFDownloadLink document={<ConstanciaPDF datos={pdf} />}
-                                    fileName={`N° de constancia ${pdf.operation_number}`}
-                                > </PDFDownloadLink>
-
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)} > Cancelar </button>
                                     <button type="submit" className="btn btn-primary" disabled={saving} >  {saving ? "Guardando..." : "Guardar pago"} </button>
