@@ -81,29 +81,6 @@ export const Payments = () => {
 
     };
 
-    const uploadVoucherToCloudinary = async (voucherToUpload) => {
-        if(!voucherToUpload){
-            return
-        }
-        const formData = new FormData()
-
-        formData.append("file", voucherToUpload)
-        formData.append("upload_preset", "Real 360")
-
-        try{
-            const response = await fetch("https://api.cloudinary.com/v1_1/dtt1xch7h/auto/upload", {
-                method: "POST",
-                body: formData
-            })
-            const data = await response.json()
-
-            return data.secure_url
-        }
-        catch(error){
-            console.log("Error uploading voucher", error)
-        }
-    }
-
     const handleSubmitPayment = async (e) => {
 
         e.preventDefault();
@@ -112,12 +89,9 @@ export const Payments = () => {
 
         setSaving(true);
 
-        const voucherUrl = await uploadVoucherToCloudinary(paymentForm.voucher)
-
         const data = {
             debts: selectedDebts,
             ...paymentForm,
-            voucher: voucherUrl,
             issue_date: new Date().toISOString()
         };
 
