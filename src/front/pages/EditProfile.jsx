@@ -94,7 +94,6 @@ export const EditProfile = () => {
                         payload: {
                             "firstname": firstname,
                             "lastname": lastname,
-                            "birth_date": dateTime,
                             "profile_image_url": profileImageUrl
                         }
                     })
@@ -102,7 +101,6 @@ export const EditProfile = () => {
                         ...store.user,
                         "firstname": firstname,
                         "lastname": lastname,
-                        "birth_date": dateTime,
                         "profile_image_url": profileImageUrl
                     }));
                 }

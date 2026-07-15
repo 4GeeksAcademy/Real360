@@ -46,7 +46,7 @@ export const Sidebar = ({ isOpen }) => {
                     <div className="d-flex row justify-content-center m-2">
                         <button type="button" className="btn btn-info m-2" onClick={goToWaterReport} >Consumo de Agua</button>
                         <button type="button" className="btn btn-info m-2" onClick={goToElectricityReport}>Consumo de Energía</button>
-                        <button type="button" className="btn btn-info m-2" onClick={goToBudgetReport}>Presupuesto</button>
+                        {/*<button type="button" className="btn btn-info m-2" onClick={goToBudgetReport}>Presupuesto</button>*/}
                     </div>
                 )}
                 {/*<button type="button" className="btn btn-primary" onClick={goToMaintenance}>Mantenimiento</button>*/}
