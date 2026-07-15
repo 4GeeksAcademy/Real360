@@ -9,9 +9,8 @@ export const Payments = () => {
     const [unitDebts, setUnitDebts] = useState([]);
     const [saving, setSaving] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [showPDF, setShowPDF] = useState(false);
-    const [pdf, setPDF] = useState(null);
     const [paymentSuccess, setPaymentSuccess] = useState(null);
+    const [paymentSaved, setPaymentSaved] = useState(false);
 
     const [paymentForm, setPaymentForm] = useState({
         operation_number: "",
@@ -46,39 +45,36 @@ export const Payments = () => {
 
     const handleCheckboxChange = (id) => {
 
-        if (selectedDebts.includes(id)) {
-            // Si ya estaba seleccionado, lo quitamos
-            setSelectedDebts(
-                selectedDebts.filter(debtId => debtId !== id)
-            );
-        } else {
-            // Si no estaba seleccionado, lo agregamos
-            setSelectedDebts([
-                ...selectedDebts,
-                id
-            ]);
-        }
+        setSelectedDebts(prev => {
+
+            if (prev.includes(id)) {
+                return prev.filter(debtId => debtId !== id);
+            }
+
+            return [...prev, id];
+
+        });
+
     };
 
     const handleVoucher = () => {
-        /*console.log("Deudas seleccionadas:", selectedDebts);*/
         setShowModal(true);
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setPaymentForm({
-            ...paymentForm,
+
+        setPaymentForm(prev => ({
+            ...prev,
             [name]: value
-        });
+        }));
     };
 
     const handleFileChange = (e) => {
-        setPaymentForm({
-            ...paymentForm,
+        setPaymentForm(prev => ({
+            ...prev,
             voucher: e.target.files[0]
-        });
-
+        }));
     };
 
     const handleSubmitPayment = async (e) => {
@@ -113,36 +109,20 @@ export const Payments = () => {
 
             if (!response.ok) {
                 throw new Error(result.msg || "Ocurrió un error.");
-            } else {
-                const pdfData = {
-                    ...data,
-                    receipt_number: result.payment.receipt_number,
-                    unit: result.payment.unit,
-                    debts_detail: unitDebts.filter(debt =>
-                        selectedDebts.includes(debt.id)
-                    )
-                };
-
-                setPDF(pdfData);
-
-                setPaymentSuccess(pdfData);
-
-                setShowPDF(true);
             }
-            alert(result.msg);
 
-            setShowModal(false);
+            const pdfData = {
+                ...data,
+                receipt_number: result.payment.receipt_number,
+                unit: result.payment.unit,
+                debts_detail: unitDebts.filter(debt =>
+                    selectedDebts.includes(debt.id)
+                )
+            };
 
-            setSelectedDebts([]);
+            setPaymentSuccess(pdfData);
 
-            setPaymentForm({
-                operation_number: "",
-                payment_date: "",
-                description: "",
-                currency: "PEN",
-                amount: "",
-                voucher: null
-            });
+            setPaymentSaved(true);
 
             await getUnitDebts();
 
@@ -160,9 +140,26 @@ export const Payments = () => {
 
     };
 
-    console.log(pdf);
+    const handleCloseModal = () => {
 
-    const today = new Date().toLocaleDateString("es-PE");
+        setShowModal(false);
+
+        setPaymentSaved(false);
+
+        setPaymentSuccess(null);
+
+        setSelectedDebts([]);
+
+        setPaymentForm({
+            operation_number: "",
+            payment_date: "",
+            description: "",
+            currency: "PEN",
+            amount: "",
+            voucher: null
+        });
+
+    };
 
     return (
         <div className="container mt-4">
@@ -171,7 +168,6 @@ export const Payments = () => {
                     <h2 className="text-center">
                         REPORTE DE DEUDA
                     </h2>
-                    <p className="text-center">  {/*Fecha de corte:  <strong> {today}</strong>*/} </p>
                     <table className="table table-bordered text-center align-middle">
                         <thead className="table-primary">
                             <tr>
@@ -215,41 +211,8 @@ export const Payments = () => {
                     {
                         selectedDebts.length > 0 &&
                         <div className="mt-4 d-flex justify-content-center">
-                            <button className="btn btn-primary me-2" onClick={handleVoucher} > 📎 Adjuntar voucher  </button>
+                            <button className="btn btn-primary me-2" onClick={handleVoucher} > Registrar Pago  </button>
                             {/*<button className="btn btn-success" disabled >  💳 Pagar en línea  </button>*/}
-                        </div>
-                    }
-                    {
-                        paymentSuccess &&
-                        <div className="alert alert-success mt-4 mb-3">
-                            <div className="mt-1">
-                                <strong> Pago registrado correctamente: </strong>
-                                Unidad: {paymentSuccess.unit?.unit_number}  -
-                                Cuota: {paymentSuccess.debts_detail[0]?.fee_year}/
-                                {paymentSuccess.debts_detail[0]?.fee_month} -
-                                Total: S/ {Number(paymentSuccess.amount).toFixed(2)}
-                                <p></p>
-                            </div>
-
-                            <div className="text-center">
-
-                                <PDFDownloadLink
-                                    document={
-                                        <ConstanciaPDF datos={paymentSuccess} />
-                                    }
-                                    fileName={`Constancia-${paymentSuccess.operation_number}.pdf`}
-                                    className="btn btn-outline-primary"
-                                >
-                                    {({ loading }) =>
-                                        loading
-                                            ? "Generando constancia..."
-                                            : "📄 Descargar constancia de pago"
-                                    }
-
-                                </PDFDownloadLink>
-
-                            </div>
-
                         </div>
                     }
                 </div>
@@ -261,54 +224,97 @@ export const Payments = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">
-                                    Registrar pago
+                                    {paymentSaved ? "Constancia de pago" : "Registrar pago"}
                                 </h5>
-                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}  >
+                                <button type="button" className="btn-close" onClick={handleCloseModal}  >
                                 </button>
                             </div>
                             <form onSubmit={handleSubmitPayment}>
                                 <div className="modal-body">
-                                    <div className="row mb-3">
-                                        <div className="col-md-6">
-                                            <label className="form-label"> Fecha de pago </label>
-                                            <input type="date" className="form-control" name="payment_date" value={paymentForm.payment_date} onChange={handleChange} required />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="form-label"> Número de operación </label>
-                                            <input type="text" className="form-control" name="operation_number" value={paymentForm.operation_number} onChange={handleChange} required />
-                                        </div>
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label"> Descripción </label>
-                                        <textarea className="form-control" name="description" rows="1" value={paymentForm.description} onChange={handleChange} placeholder="Ingrese una descripción del pago" required />
-                                    </div>
-                                    <div className="row mb-3">
-                                        <div className="col-md-6">
-                                            <label className="form-label"> Moneda  </label>
-                                            <select className="form-select" name="currency" value={paymentForm.currency} onChange={handleChange} >
-                                                <option value="PEN"> Soles (S/) </option>
-                                                <option value="USD"> Dólares ($) </option>
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="form-label"> Monto pagado </label>
-                                            <input type="number" step="0.01" className="form-control" name="amount" value={paymentForm.amount} onChange={handleChange} required />
-                                        </div>
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label"> Voucher de pago </label>
-                                        <input type="file" className="form-control" accept="image/*,.pdf" onChange={handleFileChange} required />
-                                    </div>
+
+                                    {!paymentSaved ? (
+                                        <>
+                                            <div className="row mb-3">
+                                                <div className="col-md-6">
+                                                    <label className="form-label"> Fecha de pago </label>
+                                                    <input type="date" className="form-control" name="payment_date" value={paymentForm.payment_date} onChange={handleChange} required />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label"> Número de operación </label>
+                                                    <input type="text" className="form-control" name="operation_number" value={paymentForm.operation_number} onChange={handleChange} required />
+                                                </div>
+                                            </div>
+                                            <div className="mb-3">
+                                                <label className="form-label"> Descripción </label>
+                                                <textarea className="form-control" name="description" rows="1" value={paymentForm.description} onChange={handleChange} placeholder="Ingrese una descripción del pago" required />
+                                            </div>
+                                            <div className="row mb-3">
+                                                <div className="col-md-6">
+                                                    <label className="form-label"> Moneda  </label>
+                                                    <select className="form-select" name="currency" value={paymentForm.currency} onChange={handleChange} >
+                                                        <option value="PEN"> Soles (S/) </option>
+                                                        <option value="USD"> Dólares ($) </option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="form-label"> Monto pagado </label>
+                                                    <input type="number" step="0.01" className="form-control" name="amount" value={paymentForm.amount} onChange={handleChange} required />
+                                                </div>
+                                            </div>
+                                            <div className="mb-3">
+                                                <label className="form-label"> Voucher de pago </label>
+                                                <input type="file" className="form-control" accept="image/*,.pdf" onChange={handleFileChange} required />
+                                            </div>
+                                        </>
+
+                                    ) : (
+                                        <>
+                                            <div className="text-center mb-3">
+                                                <strong> Pago registrado correctamente</strong>
+                                            </div>
+
+                                            <div className="text-center">
+
+                                                <PDFDownloadLink
+                                                    document={<ConstanciaPDF datos={paymentSuccess} />}
+                                                    fileName={`Constancia-${paymentSuccess.operation_number}.pdf`}
+                                                    className="btn btn-outline-primary"
+                                                >
+                                                    {({ loading }) =>
+                                                        loading
+                                                            ? "Generando constancia..."
+                                                            : "📄 Descargar constancia"
+                                                    }
+
+                                                </PDFDownloadLink>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
+
                                 <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)} > Cancelar </button>
-                                    <button type="submit" className="btn btn-primary" disabled={saving} >  {saving ? "Guardando..." : "Guardar pago"} </button>
+                                    {!paymentSaved ? (
+                                        <>
+                                            <button type="button" className="btn btn-secondary" onClick={handleCloseModal} >
+                                                Cancelar
+                                            </button>
+
+                                            <button type="submit" className="btn btn-primary" disabled={saving} >
+                                                {saving ? "Guardando..." : "Guardar pago"}
+                                            </button>
+                                        </>
+
+                                    ) : (
+                                        <button type="button" className="btn btn-secondary" onClick={handleCloseModal} >
+                                            Cerrar
+                                        </button>
+                                    )}
                                 </div>
                             </form>
                         </div>
                     </div>
-                </div>
+                </div >
             }
-        </div>
+        </div >
     );
 };
