@@ -78,7 +78,7 @@ export const Payments = () => {
     };
 
     const uploadVoucherToCloudinary = async (voucherToUpload) => {
-        if(!voucherToUpload){
+        if (!voucherToUpload) {
             return
         }
         const formData = new FormData()
@@ -86,7 +86,7 @@ export const Payments = () => {
         formData.append("file", voucherToUpload)
         formData.append("upload_preset", "Real 360")
 
-        try{
+        try {
             const response = await fetch("https://api.cloudinary.com/v1_1/dtt1xch7h/auto/upload", {
                 method: "POST",
                 body: formData
@@ -95,7 +95,7 @@ export const Payments = () => {
 
             return data.secure_url
         }
-        catch(error){
+        catch (error) {
             console.log("Error uploading voucher", error)
         }
     }
@@ -107,6 +107,12 @@ export const Payments = () => {
         if (saving) return;
 
         setSaving(true);
+
+        if(!paymentForm.voucher){
+            alert("Es necesario adjuntar el Voucher para registrar su pago")
+            setSaving(false);
+            return
+        }
 
         const voucherUrl = await uploadVoucherToCloudinary(paymentForm.voucher)
 

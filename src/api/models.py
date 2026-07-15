@@ -94,6 +94,7 @@ class Income(db.Model):
 
     id_unit: Mapped[int] = mapped_column(ForeignKey("unit.id"), nullable=False)
     unit: Mapped["Unit"] = relationship("Unit")
+    voucher: Mapped[str] = mapped_column(String(500), nullable=False)
 
     def serialize(self):
         return {
@@ -106,6 +107,7 @@ class Income(db.Model):
             "id_unit": self.id_unit,
             "receipt_number": self.receipt_number,
             "unit": self.unit.serialize() if self.unit else None,
+            "voucher": self.voucher,
         }
 
 

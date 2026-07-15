@@ -644,7 +644,8 @@ def create_payment():
         currency=body["currency"],
         amount_paid=float(body["amount"]),
         operation_number=body["operation_number"],
-        id_unit=unit.id
+        id_unit=unit.id,
+        voucher=body.get("voucher")
     )
 
     db.session.add(payment)
