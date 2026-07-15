@@ -227,7 +227,6 @@ export const WaterUsageUnit = ({ waterUsageM3Total, waterBillTotal, waterUsageUn
                             <th>Costo Individual</th>
                             <th>Costo A. Común</th>
                             <th>Costo Total</th>
-                            <th>Foto</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -285,14 +284,6 @@ export const WaterUsageUnit = ({ waterUsageM3Total, waterBillTotal, waterUsageUn
                                         readOnly
                                     />
                                 </td>
-                                <td>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="form-control"
-
-                                    />
-                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -305,7 +296,6 @@ export const WaterUsageUnit = ({ waterUsageM3Total, waterBillTotal, waterUsageUn
                             <td>{water_usage_cost_unit_individual_total.toFixed(2)}</td>
                             <td>{water_usage_cost_unit_commons_total.toFixed(2)}</td>
                             <td>{water_usage_cost_unit_total.toFixed(2)}</td>
-                            <td>-</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -314,7 +304,7 @@ export const WaterUsageUnit = ({ waterUsageM3Total, waterBillTotal, waterUsageUn
             <div className="d-flex justify-content-end">
                 {/*<button className="btn btn-primary w-100" onClick={saveWaterUsage}>Calcular </button>*/}
                 <button className="btn btn-primary w-100" onClick={handleSaveAndCalculate}>
-                    Calcular
+                    Guardar
                 </button>
             </div>
         </>

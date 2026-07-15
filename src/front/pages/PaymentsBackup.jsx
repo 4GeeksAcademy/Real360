@@ -216,19 +216,22 @@ export const Payments = () => {
                         selectedDebts.length > 0 &&
                         <div className="mt-4 d-flex justify-content-center">
                             <button className="btn btn-primary me-2" onClick={handleVoucher} > 📎 Adjuntar voucher  </button>
-                            {/*<button className="btn btn-success" disabled >  💳 Pagar en línea  </button>*/}
+                            <button className="btn btn-success" disabled >  💳 Pagar en línea  </button>
                         </div>
                     }
                     {
                         paymentSuccess &&
-                        <div className="alert alert-success mt-4 mb-3">
-                            <div className="mt-1">
-                                <strong> Pago registrado correctamente: </strong>
-                                Unidad: {paymentSuccess.unit?.unit_number}  -
-                                Cuota: {paymentSuccess.debts_detail[0]?.fee_year}/
-                                {paymentSuccess.debts_detail[0]?.fee_month} -
-                                Total: S/ {Number(paymentSuccess.amount).toFixed(2)}
-                                <p></p>
+                        <div className="alert alert-success mt-4 text-start">
+
+                            <div className="payment-success">
+                                ✅ Pago registrado correctamente:
+                                <span>Dpto.: {paymentSuccess.unit?.unit_number}</span>
+                                <span>
+                                    Monto: {paymentSuccess.currency} {Number(paymentSuccess.amount).toFixed(2)}
+                                </span>
+                                <span>
+                                    N° operación: {paymentSuccess.operation_number}
+                                </span>
                             </div>
 
                             <div className="text-center">
