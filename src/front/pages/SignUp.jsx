@@ -48,6 +48,7 @@ export const SignUp = () => {
         });
 
         if (response.ok) {
+            alert("Usuario registrado correctamente.");
             navigate("/portal/dashboard");
         }
     }

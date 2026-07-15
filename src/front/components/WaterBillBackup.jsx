@@ -42,7 +42,6 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
         setReceiptFile(file);
     };
 
-
     const handleSave = () => {
         const hasEmptyFields = Object.values(formData).some((value) => value === "");
 

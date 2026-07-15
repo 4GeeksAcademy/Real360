@@ -1,4 +1,6 @@
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useState, useEffect } from "react";
+import { ConstanciaPDF } from "../components/ConstanciaPDF.jsx";
 
 export const Payments = () => {
 
@@ -6,6 +8,8 @@ export const Payments = () => {
     const [unitDebts, setUnitDebts] = useState([]);
     const [saving, setSaving] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showPDF, setShowPDF] = useState(false);
+    const [pdf, setPDF] = useState(null);
 
     const [paymentForm, setPaymentForm] = useState({
         operation_number: "",
@@ -102,8 +106,12 @@ export const Payments = () => {
 
             const result = await response.json();
 
+
             if (!response.ok) {
                 throw new Error(result.msg || "Ocurrió un error.");
+            } else {
+                setPDF(data);
+                setShowPDF(true);
             }
 
             alert(result.msg);
@@ -136,6 +144,8 @@ export const Payments = () => {
         }
 
     };
+
+    console.log(pdf);
 
     const today = new Date().toLocaleDateString("es-PE");
 
@@ -192,6 +202,22 @@ export const Payments = () => {
                         <div className="mt-4 d-flex justify-content-center">
                             <button className="btn btn-primary me-2" onClick={handleVoucher} > 📎 Adjuntar voucher  </button>
                             <button className="btn btn-success" disabled >  💳 Pagar en línea  </button>
+                        </div>
+                    }
+                    {
+                        showPDF && pdf &&
+                        <div className="mt-3 text-center">
+                            <PDFDownloadLink
+                                document={<ConstanciaPDF datos={pdf} />}
+                                fileName={`Constancia-${pdf.operation_number}.pdf`}
+                                className="btn btn-outline-primary"
+                            >
+                                {({ loading }) =>
+                                    loading
+                                        ? "Generando constancia..."
+                                        : "📄 Descargar constancia de pago"
+                                }
+                            </PDFDownloadLink>
                         </div>
                     }
                 </div>
