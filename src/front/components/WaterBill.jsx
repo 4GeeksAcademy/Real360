@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../css/WaterUsage.css"
 
-export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, selectedBuilding, selectedSupplyNumber }) => {
+export const WaterBill = ({water_bill_attachment, onClose, onSave, selectedYear, selectedMonth, selectedBuilding, selectedSupplyNumber }) => {
 
     const [formData, setFormData] = useState({
         bill_number: "",
@@ -41,6 +41,7 @@ export const WaterBill = ({ onClose, onSave, selectedYear, selectedMonth, select
 
         setReceiptFile(file);
     };
+
 
     const handleSave = () => {
         const hasEmptyFields = Object.values(formData).some((value) => value === "");

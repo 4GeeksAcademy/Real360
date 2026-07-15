@@ -65,37 +65,9 @@ export const WaterUsage = () => {
         }
     };
 
-    const uploadToCloudinary = async (fileToUpload) => {
-
-        if(!fileToUpload){
-            return
-        }
-
-        const formData = new FormData()
-
-        formData.append("file", fileToUpload)
-        formData.append("upload_preset", "Real 360")
-
-        try {
-            const response = await fetch("https://api.cloudinary.com/v1_1/dtt1xch7h/auto/upload", {
-                method: "POST",
-                body: formData,
-            })
-            const data = await response.json()
-
-            return data.secure_url
-        }
-
-        catch(error){
-            console.log("Error uploading file: ", error)
-        }
-    }
-
     const handleSaveWaterBill = async (data) => {
 
         const formData = new FormData();
-
-        const uploadedUrl = await uploadToCloudinary(data.water_bill_attachment)
 
         formData.append("provider", "Sedapal");
         formData.append("year", data.year);
@@ -111,12 +83,7 @@ export const WaterUsage = () => {
         formData.append("water_usage_total_m3", data.water_usage_total_m3);
         formData.append("water_usage_total_cost", data.water_usage_total_cost);
 
-        formData.append("water_bill_attachment", uploadedUrl);
-
-        if(!uploadedUrl){
-            alert("Error, no se pudo obtener la URL: ")
-            return
-        }
+        formData.append("water_bill_attachment", data.water_bill_attachment);
 
         console.log("Datos recibidos:", data);
 

@@ -231,7 +231,7 @@ def update_password():
 def create_water_bill():
 
     form = request.form
-    file = request.files.get("water_bill_attachment")
+    file = request.form.get("water_bill_attachment")
 
     new_water_bill = WaterBill(
         bill_number=form.get("bill_number"),
@@ -249,7 +249,7 @@ def create_water_bill():
         water_usage_total_m3=form.get("water_usage_total_m3"),
         water_usage_total_cost=form.get("water_usage_total_cost"),
 
-        water_bill_attachment=file.filename if file else None
+        water_bill_attachment=file
     )
 
     try:
