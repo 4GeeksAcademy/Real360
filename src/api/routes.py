@@ -122,7 +122,8 @@ def send_contact_email():
     subject = request.json.get("subject")
     message = request.json.get("message")
 
-    send_public_email("¡Recibimos tu mensaje! 🏢 ",f"Hola {full_name},\n\nHemos recibido tu solicitud correctamente. Nuestro equipo ya está revisando tu mensaje y nos pondremos en contacto contigo lo antes posible para ayudarte con lo que necesites.\n\n¡Gracias por escribirnos!", email)
+    send_public_email("¡Recibimos tu mensaje! 🏢 ",
+                      f"Hola {full_name},\n\nHemos recibido tu solicitud correctamente. Nuestro equipo ya está revisando tu mensaje y nos pondremos en contacto contigo lo antes posible para ayudarte con lo que necesites.\n\n¡Gracias por escribirnos!", email)
 
     return jsonify({"msg": "Sended succesfully"}), 200
 
@@ -626,11 +627,20 @@ def create_payment():
         unit_number=debt.unit_number
     ).first()
 
+    last_payment = Income.query.order_by(
+        Income.id.desc()
+    ).first()
+
+    if last_payment and last_payment.receipt_number:
+        next_number = last_payment.id + 1
+    else:
+        next_number = 1
+
+    receipt_number = f"RC-{next_number:06d}"
+
     payment = Income(
-        payment_date=datetime.strptime(
-            body["payment_date"], "%Y-%m-%d"
-        ).date(),
-        description=body["description"],
+        receipt_number=receipt_number,
+        payment_date=datetime.strptime(body["payment_date"], "%Y-%m-%d").date(), description=body["description"],
         currency=body["currency"],
         amount_paid=float(body["amount"]),
         operation_number=body["operation_number"],

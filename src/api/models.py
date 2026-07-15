@@ -69,7 +69,8 @@ class Unit(db.Model):
             "unit_number": self.unit_number,
             "building": self.building,
             "id_owner": self.id_owner,
-            "id_resident": self.id_resident
+            "id_resident": self.id_resident,
+            "owner": self.owner.serialize() if self.owner else None
         }
 
 
@@ -103,6 +104,8 @@ class Income(db.Model):
             "amount_paid": self.amount_paid,
             "operation_number": self.operation_number,
             "id_unit": self.id_unit,
+            "receipt_number": self.receipt_number,
+            "unit": self.unit.serialize() if self.unit else None,
         }
 
 

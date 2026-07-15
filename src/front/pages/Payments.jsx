@@ -1,6 +1,7 @@
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useState, useEffect } from "react";
 import { ConstanciaPDF } from "../components/ConstanciaPDF.jsx";
+import "../css/Payments.css"
 
 export const Payments = () => {
 
@@ -10,6 +11,7 @@ export const Payments = () => {
     const [showModal, setShowModal] = useState(false);
     const [showPDF, setShowPDF] = useState(false);
     const [pdf, setPDF] = useState(null);
+    const [paymentSuccess, setPaymentSuccess] = useState(null);
 
     const [paymentForm, setPaymentForm] = useState({
         operation_number: "",
@@ -89,7 +91,8 @@ export const Payments = () => {
 
         const data = {
             debts: selectedDebts,
-            ...paymentForm
+            ...paymentForm,
+            issue_date: new Date().toISOString()
         };
 
         try {
@@ -106,14 +109,26 @@ export const Payments = () => {
 
             const result = await response.json();
 
+            console.log("RESPUESTA BACKEND:", result);
 
             if (!response.ok) {
                 throw new Error(result.msg || "Ocurrió un error.");
             } else {
-                setPDF(data);
+                const pdfData = {
+                    ...data,
+                    receipt_number: result.payment.receipt_number,
+                    unit: result.payment.unit,
+                    debts_detail: unitDebts.filter(debt =>
+                        selectedDebts.includes(debt.id)
+                    )
+                };
+
+                setPDF(pdfData);
+
+                setPaymentSuccess(pdfData);
+
                 setShowPDF(true);
             }
-
             alert(result.msg);
 
             setShowModal(false);
@@ -205,19 +220,39 @@ export const Payments = () => {
                         </div>
                     }
                     {
-                        showPDF && pdf &&
-                        <div className="mt-3 text-center">
-                            <PDFDownloadLink
-                                document={<ConstanciaPDF datos={pdf} />}
-                                fileName={`Constancia-${pdf.operation_number}.pdf`}
-                                className="btn btn-outline-primary"
-                            >
-                                {({ loading }) =>
-                                    loading
-                                        ? "Generando constancia..."
-                                        : "📄 Descargar constancia de pago"
-                                }
-                            </PDFDownloadLink>
+                        paymentSuccess &&
+                        <div className="alert alert-success mt-4 text-start">
+
+                            <div className="payment-success">
+                                ✅ Pago registrado correctamente:
+                                <span>Dpto.: {paymentSuccess.unit?.unit_number}</span>
+                                <span>
+                                    Monto: {paymentSuccess.currency} {Number(paymentSuccess.amount).toFixed(2)}
+                                </span>
+                                <span>
+                                    N° operación: {paymentSuccess.operation_number}
+                                </span>
+                            </div>
+
+                            <div className="text-center">
+
+                                <PDFDownloadLink
+                                    document={
+                                        <ConstanciaPDF datos={paymentSuccess} />
+                                    }
+                                    fileName={`Constancia-${paymentSuccess.operation_number}.pdf`}
+                                    className="btn btn-outline-primary"
+                                >
+                                    {({ loading }) =>
+                                        loading
+                                            ? "Generando constancia..."
+                                            : "📄 Descargar constancia de pago"
+                                    }
+
+                                </PDFDownloadLink>
+
+                            </div>
+
                         </div>
                     }
                 </div>
