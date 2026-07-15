@@ -86,12 +86,12 @@ export const Login = () => {
                             <input type="password" className="form-control" value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} />
                         </div>
                         <div className="d-flex justify-content-between align-items-center mt-3 mb-4 small-links">
-                            <Link to="/reset-password" className="forgot-password-link">
-                                ¿Olvidaste tu contraseña?
-                            </Link>
                             <Link to="/signup" className="forgot-password-link">
                                 Regístrate
                             </Link>
+                            {/*<Link to="/reset-password" className="forgot-password-link">
+                                ¿Olvidaste tu contraseña?
+                            </Link>*/}
                         </div>
                         <button type="submit" className="btn btn-primary" disabled={loading}> {loading ? "Ingresando..." : "Inicia Sesión"}</button>
                     </form>
