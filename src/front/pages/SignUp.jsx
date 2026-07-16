@@ -40,16 +40,16 @@ export const SignUp = () => {
         const data = await response.json();
         console.log(data.access_token, data.user);
 
-        localStorage.setItem("token", data.access_token);
+        //localStorage.setItem("token", data.access_token);
 
-        dispatch({
-            type: "set_user",
-            payload: data.user,
-        });
+        //dispatch({
+        //    type: "set_user",
+        //    payload: data.user,
+        //});
 
         if (response.ok) {
             alert("Usuario registrado correctamente.");
-            navigate("/portal/dashboard");
+            navigate("/login");
         }
     }
 

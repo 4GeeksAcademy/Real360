@@ -31,7 +31,8 @@ class User(db.Model):
         self.email = email
         self.password = password
 
-        self.is_active = True
+        self.rol = "Pendiente"
+        self.is_active = False
 
     def serialize(self):
         return {

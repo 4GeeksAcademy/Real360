@@ -108,7 +108,7 @@ export const Payments = () => {
 
         setSaving(true);
 
-        if(!paymentForm.voucher){
+        if (!paymentForm.voucher) {
             alert("Es necesario adjuntar el Voucher para registrar su pago")
             setSaving(false);
             return
@@ -207,6 +207,9 @@ export const Payments = () => {
                                     Dpto.
                                 </th>
                                 <th>
+                                    Año
+                                </th>
+                                <th>
                                     Mes
                                 </th>
                                 <th>
@@ -224,7 +227,10 @@ export const Payments = () => {
                                         {debt.unit_number}
                                     </td>
                                     <td>
-                                        {debt.fee_year}/{debt.fee_month}
+                                        {debt.fee_year}
+                                    </td>
+                                    <td>
+                                        {debt.fee_month}
                                     </td>
                                     <td>
                                         {debt.pending_amount.toFixed(2)}

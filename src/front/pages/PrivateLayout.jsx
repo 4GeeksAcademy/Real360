@@ -13,7 +13,7 @@ export const PrivateLayout = () => {
 
     if (!store.token || !store.user) {
         return <Navigate to="/login" replace />;
-    }  
+    }
 
     const toggleSidebar = () => {
         setSideBarOpen(prev => !prev);

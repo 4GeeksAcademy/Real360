@@ -4,37 +4,6 @@ export const UserModal = ({ user, reload, onClose }) => {
 
     const [rol, setRol] = useState(user.rol ?? "Pendiente");
     const [isActive, setIsActive] = useState(user.is_active);
-    const [units, setUnits] = useState([]);
-    const [unitId, setUnitId] = useState("");
-
-    useEffect(() => {
-
-        const loadUnits = async () => {
-
-            try {
-
-                const response = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/units`
-                );
-
-                const data = await response.json();
-
-                setUnits(data);
-
-            } catch (error) {
-
-                console.error(
-                    "Error cargando unidades",
-                    error
-                );
-
-            }
-
-        };
-
-        loadUnits();
-
-    }, []);
 
     const handleSave = async () => {
 
@@ -50,7 +19,6 @@ export const UserModal = ({ user, reload, onClose }) => {
                     body: JSON.stringify({
                         rol,
                         is_active: isActive,
-                        unit_id: unitId
                     })
                 }
             );
@@ -139,41 +107,6 @@ export const UserModal = ({ user, reload, onClose }) => {
                                 <option value="Inquilino">Inquilino</option>
                                 <option value="Vigilante">Vigilante</option>
                                 <option value="Conserje">Conserje</option>
-                            </select>
-
-                        </div>
-                        <div className="mb-3">
-
-                            <label className="form-label">
-                                Unidad
-                            </label>
-
-
-                            <select
-                                className="form-select"
-                                value={unitId}
-                                onChange={(e) => setUnitId(e.target.value)}
-                            >
-
-                                <option value="">
-                                    Sin unidad asignada
-                                </option>
-
-
-                                {
-                                    units.map(unit => (
-
-                                        <option
-                                            key={unit.id}
-                                            value={unit.id}
-                                        >
-                                            {unit.building} - {unit.unit_number}
-                                        </option>
-
-                                    ))
-                                }
-
-
                             </select>
 
                         </div>

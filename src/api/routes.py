@@ -47,6 +47,11 @@ def login():
     if not user or email != user.email or password != user.password:
         return jsonify({"msg": "Bad username or password"}), 401
 
+    if not user.is_active:
+        return jsonify({
+            "msg": "Su cuenta aún no ha sido activada por el administrador."
+        }), 403
+
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token, user=user.serialize()), 200
 
@@ -703,14 +708,3 @@ def edit_user(id):
             "msg": "Error al actualizar usuario",
             "error": str(e)
         }), 500
-
-
-@api.route("/units", methods=["GET"])
-def get_units():
-
-    units = Unit.query.all()
-
-    return jsonify([
-        unit.serialize()
-        for unit in units
-    ]), 200
