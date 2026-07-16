@@ -86,6 +86,7 @@ export const ElectricityUsage = () => {
                 return response.json()
             })
             .then(responseAsJson => {
+                console.log("Respuesta del servidor:", responseAsJson)
                 const completeBills = months.map((month) => {
                     const bill = responseAsJson.find((bill) => Number(bill.month) === Number(month.id))
                     if (!bill) {
@@ -130,8 +131,19 @@ export const ElectricityUsage = () => {
         setElectricityBills(updateBills)
     }
 
+    const firstBill = electricityBills[0]
+    const yearBill = firstBill ? firstBill.year : 2026
+    const provider = firstBill ? firstBill.provider : "Luz del Sur"
+
     return (
         <div className="d-flex row justify-content-center m-1">
+            <div className="mb-4 text-center">
+                <h2 className="fw-bold text-primary">Registro de Consumo de Luz</h2>
+                <div className="d-flex justify-content-center gap-4 fs-5 text-secondary">
+                    <span><strong>Proveedor:</strong> {provider}</span>
+                    <span><strong>Periodo:</strong> {yearBill}</span>
+                </div>
+            </div>
             <table className="table table-bordered table striped text-center align-middle">
                 <thead className="table-primary">
                     <tr className="bg-primary text-light">
