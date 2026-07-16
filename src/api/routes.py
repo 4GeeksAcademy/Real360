@@ -666,3 +666,51 @@ def create_payment():
         "msg": "Pago registrado correctamente.",
         "payment": payment.serialize()
     }), 201
+
+
+@api.route('/users', methods=['GET'])
+def get_users():
+
+    users = User.query.order_by(User.firstname).all()
+
+    return jsonify([user.serialize() for user in users]), 200
+
+
+@api.route("/users/<int:id>", methods=["PUT"])
+def edit_user(id):
+
+    user = User.query.get(id)
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    data = request.json
+
+    if "rol" in data:
+        user.rol = data["rol"]
+
+    if "is_active" in data:
+        user.is_active = data["is_active"]
+
+    try:
+        db.session.commit()
+
+        return jsonify(user.serialize()), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "msg": "Error al actualizar usuario",
+            "error": str(e)
+        }), 500
+
+
+@api.route("/units", methods=["GET"])
+def get_units():
+
+    units = Unit.query.all()
+
+    return jsonify([
+        unit.serialize()
+        for unit in units
+    ]), 200

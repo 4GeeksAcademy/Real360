@@ -24,6 +24,7 @@ import { WaterUsage } from "./pages/WaterUsage";
 import { ElectricityUsage } from "./pages/ElectricityUsage";
 import { Maintenance } from "./pages/Maintenance";
 import { Settings } from "./pages/Settings";
+import { Users } from "./pages/Users";
 
 
 export const router = createBrowserRouter(
@@ -52,6 +53,7 @@ export const router = createBrowserRouter(
         <Route path="water-usage" element={<WaterUsage />} />
         <Route path="electricity-usage" element={<ElectricityUsage />} />
         <Route path="maintenance" element={<Maintenance />} />
+        <Route path="users" element={<Users />} />
         <Route path="*" element={<h1>Not found!</h1>} />
       </Route>
     </>

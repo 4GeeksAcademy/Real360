@@ -42,6 +42,7 @@ class User(db.Model):
             "rol": self.rol,
             "birth_date": self.birth_date,
             "profile_image_url": self.profile_image_url,
+            "is_active": self.is_active
             # do not serialize the password, its a security breach
         }
 
