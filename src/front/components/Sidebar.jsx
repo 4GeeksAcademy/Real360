@@ -28,6 +28,9 @@ export const Sidebar = ({ isOpen }) => {
     const goToSettings = () => {
         navigate('settings')
     }
+    const goToUsers = () => {
+        navigate('users')
+    }
 
     const toggleReports = () => {
         setReportsOpen(prev => !prev)
@@ -49,6 +52,7 @@ export const Sidebar = ({ isOpen }) => {
                         {/*<button type="button" className="btn btn-info m-2" onClick={goToBudgetReport}>Presupuesto</button>*/}
                     </div>
                 )}
+                <button type="button" className="btn btn-primary" onClick={goToUsers}>Usuarios</button>
                 {/*<button type="button" className="btn btn-primary" onClick={goToMaintenance}>Mantenimiento</button>*/}
                 {/*<button type="button" className="btn btn-primary" onClick={goToSettings}>Configuración</button>*/}
             </div>
