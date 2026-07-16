@@ -39,12 +39,15 @@ def handle_hello():
 
 @api.route("/login", methods=["POST"])
 def login():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    email = request.json.get("email")
+    password = request.json.get("password")
 
-    user = User.query.filter_by(email=email, password=password).one_or_none()
+    user = User.query.filter_by(email=email).one_or_none()
 
-    if not user or email != user.email or password != user.password:
+    if not user:
+        return jsonify({"msg": "Bad username or password"}), 401
+
+    if password != user.password:
         return jsonify({"msg": "Bad username or password"}), 401
 
     if not user.is_active:

@@ -37,7 +37,7 @@ export const Login = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data.message || "Error al iniciar sesión");
+                alert(data.msg || "Error al iniciar sesión");
                 return;
             }
 
